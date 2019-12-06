@@ -19,55 +19,33 @@ We ran the entire CodeSimilarity v.2 pipeline on only the "winning" (or correct)
 
 ## Preliminary Results:
 
-For those concrete tests of length 20, we found (by manual inspection):
+Of the 44 winning submissions from the Sector 2 Level 5 dataset, our pipeline produced **five** clusters.
 
-* **Three** false positives (i.e., three submissions incorrectly clustered)
-* **Two** *questionable* submissions (i.e., two submissions grouped together, even though one used the *O(n)* strategy, whereas the other used the *O(2n)* strategy)
+#### Cluster Zero
 
-For the second bullet, it's important to note that the two questionable submissions were grouped into **cluster 4** but should have been grouped into **cluster 0** (because they employ the same strategy). Again, one of the two submissions employed *O(n)* strategy while the other used the *O(2n)*.
+Cluster zero has 29 submissions and are each in one of the following forms:
 
-
-
-### False Positives
-
-<span style='color:red'>**TODO:**</span> How do we define these clusters, by time complexity (i.e., num. loops), or by logical equivalence. This is crucial, as this directly impacts false positive rate.
-
-### Questionable submissions
-
-The questionable submissions employing the *O(2n)* strategy is:
-
-```c#
+``` c#
+// Used default min(), max() functions
 using System;
+using System.Linq;
 public class Program {
   public static int Puzzle(int[] a) {
-	 int min=a[0],max=a[0];
-	 int i=0,k=0;
-		 while((i+1)!=a.Length) {
-		  if(a[i+1]>max) max = a[i+1];
-		  i++;
-		 }
-		  while((k+1)!=a.Length) {
-		  if(a[k+1]<min) min = a[k+1];
-		  //else min=a[k];
-		  k++;
-		 }
-    return max-min;
+    return a.Max()-a.Min();
   }
 }
 ```
 
-
-
-The questionable submission employing the *O(n)* strategy is:
-
 ```c#
+// Implemented min(), max() themselves
 using System;
 public class Program {
   public static int Puzzle(int[] a) {
-	  int max=a[0],min=a[0];
-	  foreach(int i in a) {
-		  max=i>max?i:max;
-		  min=i<min?i:min;
+	  int min = int.MaxValue;
+	  int max = int.MinValue;
+	  foreach(int i in a){
+		  if (i>max)max=i;
+		  if (i<min)min=i;
 	  }
     return max-min;
   }
@@ -76,19 +54,122 @@ public class Program {
 
 
 
-These two questionable submissions should've been placed into **cluster 0**, which follows the following pattern:
+#### Cluster One
+
+Cluster one has two submissions and are both in the following form:
 
 ```c#
+// Two pointer method. Iterate through only half of array.
 using System;
-using System.Linq;
 public class Program {
   public static int Puzzle(int[] a) {
-	return a.Max()-a.Min();
+    Array.Sort(a);
+	int currentMax=0;
+	int current=0;
+	int end = a.Length-1; 
+	for(int i=0;i<a.Length/2;++i)
+	{
+		current = a[end-i]-a[i];
+		if(current > currentMax)currentMax=current;
+	}
+	return currentMax;
   }
 }
 ```
 
 
+
+#### Cluster Two
+
+Cluster two has 10 submissions and are all in the following form:
+
+``` c#
+// Sort, then subtract.
+using System;
+using System.Collections;
+public class Program {
+  public static int Puzzle(int[] a) {
+   Array.Sort(a);
+    return a[a.Length-1]-a[0];
+  }
+}
+```
+
+
+
+#### Cluster Three
+
+Cluster three has one submission:
+
+```c#
+// Pairwise comparison
+using System;
+public class Program {
+  public static int Puzzle(int[] a) {
+	  int max=0;
+	  foreach(int i in a){
+		foreach(int j in a){
+		  max=i-j>max?i-j:max;
+	  }
+	  }
+    return max;
+  }
+}
+```
+
+
+
+#### Cluster Four 
+
+Cluster four has two submissions:
+
+``` c#
+// Bubble sort
+using System;
+public class Program {
+  public static int Puzzle(int[] arr) {
+    int n=arr.Length;
+    int temp = 0; 
+      for (int write = 0; write < arr.Length; write++) { 
+        for (int sort = 0; sort < arr.Length - 1; sort++) { 
+          if (arr[sort] > arr[sort + 1]) { 
+            temp = arr[sort + 1]; 
+            arr[sort + 1] = arr[sort]; 
+            arr[sort] = temp; 
+          } 
+        }
+      }
+    return arr[n-1]-arr[0];
+  }
+}
+```
+
+``` c#
+// Bubble sort
+using System;
+public class Program {
+  public static int Puzzle(int[] a) {
+    if (a.Length > 2) {
+      for (int i = 0; i < a.Length; i++) {
+        for (int j = 0; j < a.Length - 1; j++) {
+		  if (a[j] > a[j + 1]) {
+		    int temp = a[j];
+            a[j] = a[j + 1];
+            a[j + 1] = temp;
+          }
+        }
+      }
+      int max = a[a.Length-1];
+      int min = a[0];
+      //if (a.Length == 20) { return max;}
+      return max-min;
+    }
+    else if (a.Length == 2)
+      return a[0] > a[1] ? a[0] - a[1] : a[1] - a[0];
+    return 0;
+  }
+}
+```
 
 
 
