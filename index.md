@@ -12,8 +12,8 @@ We ran the entire CodeSimilarity v.2 pipeline on only the "winning" (or correct)
 
 1. Collecting all unique, concrete tests resulting from running Pex on all submissions
 
- 	2. Collecting all path conditions (PCs) from re-running Pex on all submissions, this time using only the unique, concrete tests as seeded inputs
- 	3. Clustering submissions by PC, according to Z3
+ 	2. Collecting all path conditions (PCs) and symbolic return values (SRVs) from re-running Pex on all submissions, this time using only the unique, concrete tests as seeded inputs
+ 	3. Clustering submissions by PCs and SRVs, according to Z3
 
 
 
