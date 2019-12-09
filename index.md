@@ -27,9 +27,9 @@ We ran the entire CodeSimilarity v.2 pipeline on only the "winning" (or correct)
 
 
 
-## Preliminary Results:
+## Preliminary Results: 
 
-### Experiment One —
+### Experiment One 
 
 Of the 44 winning submissions from the Sector 2 Level 5 dataset, our pipeline produced **five** clusters.
 
@@ -185,13 +185,13 @@ public class Program {
 
 
 
-### Experiment Two —
+### Experiment Two 
 
 #### Cluster Zero 
 
 
 
-### Experiment Three —
+### Experiment Three 
 
 #### Cluster Zero
 
