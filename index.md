@@ -17,7 +17,19 @@ We ran the entire CodeSimilarity v.2 pipeline on only the "winning" (or correct)
 
 
 
+## CodeHunt Dataset:
+
+|    Problem     | Num. Winning/Total C# Subs. | Num. Compiling C# Subs. | Num. Winning/Total Java Subs. | Num. Compiling Java Subs. |
+| :------------: | :-------------------------: | :---------------------: | :---------------------------: | :-----------------------: |
+| Sector2-Level4 |           43/623            |           547           |             ?/558             |             ?             |
+| Sector2-Level5 |           44/287            |            ?            |             ?/247             |             ?             |
+| Sector3-Level1 |           15/102            |           77            |             ?/156             |             ?             |
+
+
+
 ## Preliminary Results:
+
+### Experiment One —
 
 Of the 44 winning submissions from the Sector 2 Level 5 dataset, our pipeline produced **five** clusters.
 
@@ -170,6 +182,18 @@ public class Program {
   }
 }
 ```
+
+
+
+### Experiment Two —
+
+#### Cluster Zero 
+
+
+
+### Experiment Three —
+
+#### Cluster Zero
 
 
 
