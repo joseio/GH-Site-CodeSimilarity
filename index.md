@@ -24,6 +24,7 @@ We ran the entire CodeSimilarity v.2 pipeline on only the "winning" (or correct)
 | Sector2-Level4 |           43/623            |           547           |             ?/558             |             ?             |
 | Sector2-Level5 |           44/287            |            ?            |             ?/247             |             ?             |
 | Sector3-Level1 |           15/102            |           77            |             ?/156             |             ?             |
+| Sector3-Level2 |           48/287            |            ?            |             ?/247             |                           |
 
 
 
@@ -187,7 +188,15 @@ public class Program {
 
 ### Experiment Two 
 
+Clustering by PC and RV for Sector3-Level2 yielded exactly the same results as clustering by PC only. It is likely because the input is a single integer, meaning that the PCs and RVs were very short (with little variance). 
+
+​	Example: PC: `return x == 0;`,  RV: `return 0;`
+
+I suspect that clustering by PC and RV will be more effective at pruning false-positives on problems with more complex inputs (e.g., int arrays, strings)
+
 #### Cluster Zero 
+
+**TODO:** Show examples of the potential FPs per cluster
 
 
 
