@@ -186,7 +186,9 @@ public class Program {
 
 
 
-*Note:* Skipping Sector1-Level6 b/c it's giving issues with parsing unicode characters and `string.Contains()`.
+
+
+
 
 ### Experiment Two 
 
@@ -205,6 +207,12 @@ I suspect that clustering by PC and RV will be more effective at pruning false-p
 ### Experiment Three 
 
 #### Cluster Zero
+
+
+
+### Bugs
+
+Skipping Sector1-Level6 b/c it's giving issues with parsing unicode characters and `string.Contains()`. Also Sector2-Level4 was running `cluster.py` for 3 days and still hasn't finish...so I will also skip this one.
 
 
 
