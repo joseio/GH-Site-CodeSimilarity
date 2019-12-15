@@ -186,6 +186,8 @@ public class Program {
 
 
 
+*Note:* Skipping Sector1-Level6 b/c it's giving issues with parsing unicode characters and `string.Contains()`.
+
 ### Experiment Two 
 
 Clustering by PC and RV for Sector3-Level2 yielded exactly the same results as clustering by PC only. It is likely because the input is a single integer, meaning that the PCs and RVs were very short (with little variance). 
