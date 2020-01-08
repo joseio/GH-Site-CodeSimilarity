@@ -1,6 +1,6 @@
 # <center>CodeSimilarity v. 2</center>
 
-*Updated December 21st, 2019*
+*Last updated January 7th, 2020*
 
 
 
