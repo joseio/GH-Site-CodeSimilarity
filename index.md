@@ -18,6 +18,8 @@
 
 [Preliminary Results](#Preliminary Results)
 
+[Sample of Results](#Quick Peak of Sector2-Level5's Results)
+
 [Bugs](#Bugs)
 
 
@@ -252,10 +254,11 @@ Overall, the research questions we'd like to answer in our use cases are as foll
 
 |     Problem     | Num. Winning/Total C# Subs. | Num. Compiling C# Subs. | Num. Winning/Total Java Subs. | Num. Compiling Java Subs. |
 | :-------------: | :-------------------------: | :---------------------: | :---------------------------: | :-----------------------: |
+| Sector1-Level4  |           63/1294           |            -            |            ?/1077             |             ?             |
 | Sector2-Level4  |           43/623            |           547           |             ?/558             |             ?             |
-| Sector2-Level5  |           44/287            |            ?            |             ?/247             |             ?             |
+| Sector2-Level5  |           44/287            |            -            |             ?/247             |             ?             |
 | Sector3- Level1 |           15/102            |           77            |             ?/156             |             ?             |
-| Sector3-Level2  |           48/287            |            ?            |             ?/247             |                           |
+| Sector3-Level2  |           48/287            |            -            |             ?/247             |             ?             |
 
 
 
@@ -263,11 +266,43 @@ Overall, the research questions we'd like to answer in our use cases are as foll
 
 ## Preliminary Results
 
-### Experiment One 
+### Experiment One
 
-Of the 44 winning submissions from the Sector 2 Level 5 dataset, our pipeline produced **five** clusters.
+In the first experiment, we cluster using only the path conditions.
 
-#### Cluster Zero
+| **Problem**    | Num. Clusters | **Num. FPs** (Just PC) |
+| -------------- | ------------- | ---------------------- |
+| Sector1-Level4 | 6             |                        |
+| Sector2-Level1 | 14            | 8                      |
+| Sector2-Level5 | 5             |                        |
+| Sector3-Level1 | 2             |                        |
+| Sector3-Level2 | 4             |                        |
+
+See a [quick peak of Sector2-Level5's results here.](#Quick Peak of Sector2-Level5's Results)
+
+
+
+### Experiment Two 
+
+In this experiment, we cluster by both the path conditions and return values.
+
+| **Problem**    | Num. Clusters | Num. FPs |
+| -------------- | ------------- | -------- |
+| Sector1-Level4 | 10            |          |
+| Sector2-Level1 | 14            | -        |
+| Sector2-Level5 | 5             |          |
+| Sector3-Level1 | 2             |          |
+| Sector3-Level2 | 5             |          |
+
+#### 
+
+
+
+## Quick Peak of Sector2-Level5's Results
+
+Below we show a sample of the clusters produced by running our pipeline on the winning submissions in Sector2-Level5.
+
+### Cluster Zero
 
 Cluster zero has 29 submissions and are each in one of the following forms:
 
@@ -298,9 +333,7 @@ public class Program {
 }
 ```
 
-
-
-#### Cluster One
+### Cluster One
 
 Cluster one has two submissions and are both in the following form:
 
@@ -323,9 +356,7 @@ public class Program {
 }
 ```
 
-
-
-#### Cluster Two
+### Cluster Two
 
 Cluster two has 10 submissions and are all in the following form:
 
@@ -341,9 +372,7 @@ public class Program {
 }
 ```
 
-
-
-#### Cluster Three
+### Cluster Three
 
 Cluster three has one submission:
 
@@ -363,9 +392,7 @@ public class Program {
 }
 ```
 
-
-
-#### Cluster Four 
+### Cluster Four 
 
 Cluster four has two submissions:
 
@@ -419,28 +446,6 @@ public class Program {
 
 
 
-### Experiment Two 
-
-Clustering by PC and RV for Sector3-Level2 yielded exactly the same results as clustering by PC only. It is likely because the input is a single integer, meaning that the PCs and RVs were very short (with little variance). 
-
-​	Example: PC: `return x == 0;`,  RV: `return 0;`
-
-I suspect that clustering by PC and RV will be more effective at pruning false-positives on problems with more complex inputs (e.g., int arrays, strings)
-
-#### Cluster Zero 
-
-**TODO:** Show examples of the potential FPs per cluster
-
-
-
-### Experiment Three 
-
-#### Cluster Zero
-
-
-
-
-
 ## Bugs
 
 Skipping Sector1-Level6 b/c it's giving issues with parsing unicode characters and `string.Contains()`. Also Sector2-Level4 was running `cluster.py` for 3 days and still hasn't finish...so I will also skip this one.
@@ -449,3 +454,4 @@ Skipping Sector1-Level6 b/c it's giving issues with parsing unicode characters a
 
 
 
+​	
