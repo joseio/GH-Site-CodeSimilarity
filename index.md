@@ -1,6 +1,6 @@
 # <center>CodeSimilarity v. 2</center>
 
-*Last updated January 7th, 2020*
+*Last updated January 12th, 2020*
 
 
 
@@ -19,6 +19,8 @@
 [Preliminary Results](#Preliminary Results)
 
 [Sample of Results](#Quick Peak of Sector2-Level5's Results)
+
+[Cyclomatic Complexity Number (CCN)](#Cyclomatic Complexity Number (CCN))
 
 [Bugs](#Bugs)
 
@@ -41,11 +43,11 @@ We ran the entire CodeSimilarity v.2 pipeline on only the "winning" (or correct)
 
 ## Potential Applications of Tool:
 
-Let's say that we have a problem where the instructor asks students to write a method, `Puzzle` in C# to find the greatest element in an integer array using the **quick sort** algorithm. The method takes in an integer array. Let's say the student submissions to the problem look like this:
+Let's say that we have a problem where the instructor asks students to write a method, `Puzzle` in C# to find the greatest element in an integer array by implementing the **quick sort** algorithm. The method takes in an integer array. Let's say the student submissions to the problem look like this:
 
 
 
-#### Submission one (correct)
+#### Submission one (completely correct)
 
 Let's say that one student submits a correct quick sort implementation:
 
@@ -139,14 +141,16 @@ static int Puzzle(int[] arr) {
 Now let's say that the student simply used C#'s built-in `array.Max()` function, without performing any sorting:
 
 ```c# 
-static int Puzzle(int[] arr) {
-  return arr.Max();
-}
+  static int Puzzle(int[] arr) {
+    return arr.Max();
+  }
 ```
 
 
 
-#### Submission five (right answer, wrong algorithm)
+#### Submission five (right answer, no implementation)
+
+Now let's say that a student doesn't implement their own sorting algorithm, but instead uses C\#'s built-in `Array.Sort()` function (which uses quick sort under the hood, [see documentation](https://docs.microsoft.com/en-us/dotnet/api/system.array.sort?redirectedfrom=MSDN&view=netframework-4.8#System_Array_Sort_System_Array_)). 
 
 ```c#	
 static int Puzzle(int[] arr) {
@@ -157,7 +161,7 @@ static int Puzzle(int[] arr) {
 
 
 
-#### Submission six (incorrect)
+#### Submission six (wrong answer, buggy implementation)
 
 Now let's say that another student submitted a [slightly] incorrect implementation of the quick sort algorithm:
 
@@ -205,25 +209,33 @@ static int Puzzle(int[] arr) {
 
 In this use case, we would want to give each submission different feedback because they don't all commit the same mistakes. 
 
-For submissions **two** and **three**, I'd give the feedback: "Your algorithm returned the correct answer, but has average time complexity O(n^2), which doesn't match quick sort's O(nlogn). You may have implemented selection/bubble/insertion sort. Instead, consider adding a helper function and the divide-and-conquer recursive strategy."
+For submission **one**, we'd give the feedback: "Correct answer."
 
-For submission **four**, I'd give the feedback: "Your algorithm returned the correct answer, but has average time complexity O(n), which doesn't match quick sort's O(nlogn). You did not implement any sorting algorithm."
+For submissions **two** and **three**, we'd give the feedback: "Your algorithm returned the correct answer, but has average time complexity O(n^2), which doesn't match quick sort's O(nlogn). You may have implemented selection/bubble/insertion sort. Instead, consider adding a helper function and the divide-and-conquer recursive strategy."
 
-For submission **five**, I'd give the feedback: "Your algorithm returned the correct answer and has the same average time complexity as quick sort's O(nlogn), but you used C#'s built-in `Sort()` function instead of implementing your own."
+For submission **four**, we'd give the feedback: "Your algorithm returned the correct answer, but has average time complexity O(n), which doesn't match quick sort's O(nlogn). You did not implement any sorting algorithm."
 
-For submission **six**, I'd give the feedback: "Your almost there! Your algorithm yields runtime errors (IndexOutOfRangeException), but uses the same strategy as the correct solution. Check the bounds of your for/while loops as well as your recursive calls for missing '+1' or '-1's."
+For submission **five**, we'd give the feedback: "Your algorithm returned the correct answer and has the same average time complexity as quick sort's O(nlogn), but you used C#'s built-in `Sort()` function instead of implementing your own."
+
+For submission **six**, we'd give the feedback: "Your almost there! Your algorithm yields runtime errors (IndexOutOfRangeException), but uses the same strategy as the correct solution. Check the bounds of your for/while loops as well as your recursive calls for missing '+1' or '-1's."
+
+We could use the [Lizard code complexity analyzer](http://www.lizard.ws/#) to estimate how 'complex' code *looks* (as opposed to its actual time complexity). We would calculate the average CCN (Cyclomatic complexity number) for all submissions per cluster, which would allow us to give such personalized feedback.
 
 
 
-### 2. Partial credit/penalization
+### 2. Partial credit/penalization*
 
 In this use case, the instructor would use the clusters to give partial credit to submissions based on their adherence to the assignment prompt. 
 
+Submission **one**, we'd give the feedback: "Correct answer."
+
 Submissions **two** and **three** would likely receive the same score, since they all implemented a sorting algorithm, albeit the incorrect one, and produced the correct answer.
 
-Submissions **four** and **five** would be penalized more than submissions two and three, and would likely receive the same score, since they produced the correct answer but did not implement a sorting algorithm.
+Submissions **four** and **five** would be penalized more than submissions two and three, and would likely receive the same score, since they produced the correct answer but did not *implement* a sorting algorithm (they instead used C\#'s built-in functions).
 
-Submission **six** would get penalized less than submissions two and three because, although the correct answer was not reached, the algorithm attempted was quick sort and the submission was close to the correct solution. 
+Submission **six** would get penalized equally or less than submissions two and three because, although the correct answer was not reached, the algorithm attempted was quick sort and the submission was close to the correct solution. 
+
+We would calculate the average CCN (Cyclomatic complexity number) via [Lizard](http://www.lizard.ws/) for all submissions per cluster. This is a way of assigning meaning to each cluster, which would help the instructor more quickly understand the contents of each cluster and assign grades.
 
 
 
@@ -243,8 +255,8 @@ Overall, the research questions we'd like to answer in our use cases are as foll
 
 ###### Research Questions
 
-1. Can our approach cluster submissions by algorithm implementations with a low false positive rate?
-2. Can our approach cluster more faithfully than AST-based approaches?
+1. Does our approach cluster submissions by algorithm implementations with a low false positive rate?
+2. Does our approach cluster more faithfully than AST-based approaches?
 
 
 
@@ -252,15 +264,25 @@ Overall, the research questions we'd like to answer in our use cases are as foll
 
 ## CodeHunt Dataset
 
-|     Problem     | Num. Winning/Total C# Subs. | Num. Compiling C# Subs. | Num. Winning/Total Java Subs. | Num. Compiling Java Subs. |
-| :-------------: | :-------------------------: | :---------------------: | :---------------------------: | :-----------------------: |
-| Sector1-Level4  |           63/1294           |            -            |            ?/1077             |             ?             |
-| Sector2-Level4  |           43/623            |           547           |             ?/558             |             ?             |
-| Sector2-Level5  |           44/287            |            -            |             ?/247             |             ?             |
-| Sector3- Level1 |           15/102            |           77            |             ?/156             |             ?             |
-| Sector3-Level2  |           48/287            |            -            |             ?/247             |             ?             |
+|     Problem     | Num. Winning/Total C# Subs. | Num. Winning/Total Java Subs. |
+| :-------------: | :-------------------------: | :---------------------------: |
+| Sector1-Level4  |           63/1294           |            ?/1077             |
+| Sector2-Level1  |           42/1495           |            ?/1374             |
+| Sector2-Level5  |           44/287            |             ?/247             |
+| Sector3- Level1 |           15/102            |             ?/156             |
+| Sector3-Level2  |           48/287            |             ?/247             |
 
+### Problem Descriptions
 
+**Sector1-Level4: **Test if a number is a multiple of another number.
+
+**Sector2-Level1: **Compute average of a list of numbers, rounded to closest integer.
+
+**Sector2-Level5: **Find maximum difference between 2 elements in an array.
+
+**Sector3-Level1: **Filter retaining only values >= threshold (a crude noise filter).
+
+**Sector3-Level2: **Compute sum of n-th and (n-1)st Fibonacci numbers.
 
 
 
@@ -268,15 +290,15 @@ Overall, the research questions we'd like to answer in our use cases are as foll
 
 ### Experiment One
 
-In the first experiment, we cluster using only the path conditions.
+In the first experiment, we cluster the winning submissions using only their path conditions.
 
-| **Problem**    | Num. Clusters | **Num. FPs** (Just PC) |
-| -------------- | ------------- | ---------------------- |
-| Sector1-Level4 | 6             |                        |
-| Sector2-Level1 | 14            | 8                      |
-| Sector2-Level5 | 5             |                        |
-| Sector3-Level1 | 2             |                        |
-| Sector3-Level2 | 4             |                        |
+| **Problem**    | Num. Clusters | **Num. FP Subs.** |
+| -------------- | ------------- | ----------------- |
+| Sector1-Level4 | 6             | 1                 |
+| Sector2-Level1 | 14            | 8                 |
+| Sector2-Level5 | 5             | 0                 |
+| Sector3-Level1 | 2             | 0                 |
+| Sector3-Level2 | 4             | 13*               |
 
 See a [quick peak of Sector2-Level5's results here.](#Quick Peak of Sector2-Level5's Results)
 
@@ -284,17 +306,17 @@ See a [quick peak of Sector2-Level5's results here.](#Quick Peak of Sector2-Leve
 
 ### Experiment Two 
 
-In this experiment, we cluster by both the path conditions and return values.
+In this experiment, we cluster the winning submissions by both their path conditions and return values.
 
-| **Problem**    | Num. Clusters | Num. FPs |
-| -------------- | ------------- | -------- |
-| Sector1-Level4 | 10            |          |
-| Sector2-Level1 | 14            | -        |
-| Sector2-Level5 | 5             |          |
-| Sector3-Level1 | 2             |          |
-| Sector3-Level2 | 5             |          |
+| **Problem**    | Num. Clusters | Num. FP Subs. |
+| -------------- | ------------- | ------------- |
+| Sector1-Level4 | 10            | 0             |
+| Sector2-Level1 | 14            | 5             |
+| Sector2-Level5 | 5             | 0             |
+| Sector3-Level1 | 2             | 0             |
+| Sector3-Level2 | 5             | 13*           |
 
-#### 
+*\* = Those submissions that used a different approach than those they were clustered with (e.g., a O(2^n) recursive Fibonacci implementation clustered with submissions that used an iterative O(n) approach).*
 
 
 
@@ -446,12 +468,22 @@ public class Program {
 
 
 
+
+
+## Cyclomatic Complexity Number (CCN)
+
+See the [Lizard](https://github.com/terryyin/lizard) GitHub repository for tool details. One thing to note is that when running Lizard on a given folder, it only analyzes the files with unique (non-duplicate) contents.
+
+
+
+Also see [Code Complete](https://www.microsoftpressstore.com/store/code-complete-9780735619678) (p. 458) by McConnell to understand how to interpret CCN values. 
+
+![img](https://i0.wp.com/blog.feabhas.com/wp-content/uploads/2018/07/table2.png?resize=640%2C170&ssl=1)
+
+
+
+
+
 ## Bugs
 
-Skipping Sector1-Level6 b/c it's giving issues with parsing unicode characters and `string.Contains()`. Also Sector2-Level4 was running `cluster.py` for 3 days and still hasn't finish...so I will also skip this one.
-
-
-
-
-
-​	
+Skipping <u>Sector1-Level6</u> b/c it's giving issues with parsing unicode characters and `string.Contains()`. <u>Sector2-Level3</u> had issues implementing the `String` methods, which was impacting clustering results...so we'll skip this as well. Also <u>Sector2-Level4</u> was running `cluster.py` for 3 days and still hasn't finish...so I will also skip this one. 
