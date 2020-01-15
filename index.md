@@ -255,8 +255,8 @@ Overall, the research questions we'd like to answer in our use cases are as foll
 
 ###### Research Questions
 
-1. Does our approach cluster submissions by algorithm implementations with a low false positive rate?
-2. Does our approach cluster more faithfully than AST-based approaches?
+1. Does our approach cluster submissions by algorithm implementations with a low false-positive rate?
+2. Does clustering by both PCs and RVs produce less false-positives than clustering by just PCs?
 
 
 
@@ -292,13 +292,13 @@ Overall, the research questions we'd like to answer in our use cases are as foll
 
 In the first experiment, we cluster the winning submissions using only their path conditions.
 
-| **Problem**    | Num. Clusters | **Num. FP Subs.** |
-| -------------- | ------------- | ----------------- |
-| Sector1-Level4 | 6             | 1                 |
-| Sector2-Level1 | 14            | 8                 |
-| Sector2-Level5 | 5             | 0                 |
-| Sector3-Level1 | 2             | 0                 |
-| Sector3-Level2 | 4             | 13*               |
+| **Problem**    | Num. Clusters | **Num. FP Subs./Num. Total Winning Subs.** |
+| -------------- | ------------- | ------------------------------------------ |
+| Sector1-Level4 | 6             | 1/63                                       |
+| Sector2-Level1 | 14            | 8/42                                       |
+| Sector2-Level5 | 5             | 0/44                                       |
+| Sector3-Level1 | 2             | 0/15                                       |
+| Sector3-Level2 | 4             | 13*/48                                     |
 
 See a [quick peak of Sector2-Level5's results here.](#Quick Peak of Sector2-Level5's Results)
 
@@ -310,11 +310,11 @@ In this experiment, we cluster the winning submissions by both their path condit
 
 | **Problem**    | Num. Clusters | Num. FP Subs. |
 | -------------- | ------------- | ------------- |
-| Sector1-Level4 | 10            | 0             |
-| Sector2-Level1 | 14            | 5             |
-| Sector2-Level5 | 5             | 0             |
-| Sector3-Level1 | 2             | 0             |
-| Sector3-Level2 | 5             | 13*           |
+| Sector1-Level4 | 10            | 0/63          |
+| Sector2-Level1 | 14            | 5/42          |
+| Sector2-Level5 | 5             | 0/44          |
+| Sector3-Level1 | 2             | 0/15          |
+| Sector3-Level2 | 5             | 13*/48        |
 
 *\* = Those submissions that used a different approach than those they were clustered with (e.g., a O(2^n) recursive Fibonacci implementation clustered with submissions that used an iterative O(n) approach).*
 
