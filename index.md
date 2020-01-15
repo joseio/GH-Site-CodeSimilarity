@@ -1,6 +1,6 @@
 # <center>CodeSimilarity v. 2</center>
 
-*Last updated January 12th, 2020*
+*Last updated January 15th, 2020*
 
 
 
@@ -21,6 +21,8 @@
 [Sample of Results](#Quick Peak of Sector2-Level5's Results)
 
 [Cyclomatic Complexity Number (CCN)](#Cyclomatic Complexity Number (CCN))
+
+[Questions and Doubts](#Questions and Doubts)
 
 [Bugs](#Bugs)
 
@@ -245,7 +247,7 @@ In this use case, the tool would match incorrect submissions to correct ones tha
 
 
 
- ### 4. Track how student submissions move through different clusters
+ ### 4. Track how student submissions move through different clusters*
 
 In this use case, we could see how students' code changes when they get partial credit on CodeHunt. For example, on CodeHunt, students can get the answer correct and **not** get 3/3 points (it's possible to get 2/3 for having too many lines of code). So we can track student submissions and see how they move throughout the different clusters (i.e., different approaches). This type of analytics may be useful to an instructor to understand how their students are approaching different problems, and how they progress towards the correct answer.
 
@@ -264,13 +266,13 @@ Overall, the research questions we'd like to answer in our use cases are as foll
 
 ## CodeHunt Dataset
 
-|     Problem     | Num. Winning/Total C# Subs. | Num. Winning/Total Java Subs. |
-| :-------------: | :-------------------------: | :---------------------------: |
-| Sector1-Level4  |           63/1294           |            ?/1077             |
-| Sector2-Level1  |           42/1495           |            ?/1374             |
-| Sector2-Level5  |           44/287            |             ?/247             |
-| Sector3- Level1 |           15/102            |             ?/156             |
-| Sector3-Level2  |           48/287            |             ?/247             |
+|     Problem     | Num. Winning/Total C# Subs. | Num. Compiling Subs. | Num. Winning/Total Java Subs. |
+| :-------------: | :-------------------------: | :------------------: | :---------------------------: |
+| Sector1-Level4  |           63/1294           |         1036         |            ?/1077             |
+| Sector2-Level1  |           42/1495           |                      |            ?/1374             |
+| Sector2-Level5  |           44/287            |                      |             ?/247             |
+| Sector3- Level1 |           15/102            |                      |             ?/156             |
+| Sector3-Level2  |           48/287            |                      |             ?/247             |
 
 ### Problem Descriptions
 
@@ -292,15 +294,15 @@ Overall, the research questions we'd like to answer in our use cases are as foll
 
 In the first experiment, we cluster the winning submissions using only their path conditions.
 
-| **Problem**    | Num. Clusters | **Num. FP Subs./Num. Total Winning Subs.** |
-| -------------- | ------------- | ------------------------------------------ |
-| Sector1-Level4 | 6             | 1/63                                       |
-| Sector2-Level1 | 14            | 8/42                                       |
-| Sector2-Level5 | 5             | 0/44                                       |
-| Sector3-Level1 | 2             | 0/15                                       |
-| Sector3-Level2 | 4             | 13*/48                                     |
+| **Problem**    | Num. Clusters | **Num. FP Subs. /Num. Total Winning Subs.** |
+| -------------- | ------------- | ------------------------------------------- |
+| Sector1-Level4 | 6             | 1(?)/63                                     |
+| Sector2-Level1 | 14            | 8/42                                        |
+| Sector2-Level5 | 5             | 0/44                                        |
+| Sector3-Level1 | 2             | 0/15                                        |
+| Sector3-Level2 | 4             | 13*/48                                      |
 
-See a [quick peak of Sector2-Level5's results here.](#Quick Peak of Sector2-Level5's Results)
+See [doubts surrounding Sector1-Level4 here](#Questions and Doubts) and [quick peak of Sector2-Level5's results here.](#Quick Peak of Sector2-Level5's Results)
 
 
 
@@ -308,15 +310,17 @@ See a [quick peak of Sector2-Level5's results here.](#Quick Peak of Sector2-Leve
 
 In this experiment, we cluster the winning submissions by both their path conditions and return values.
 
-| **Problem**    | Num. Clusters | Num. FP Subs. |
-| -------------- | ------------- | ------------- |
-| Sector1-Level4 | 10            | 0/63          |
-| Sector2-Level1 | 14            | 5/42          |
-| Sector2-Level5 | 5             | 0/44          |
-| Sector3-Level1 | 2             | 0/15          |
-| Sector3-Level2 | 5             | 13*/48        |
+| **Problem**    | Num. Clusters | Num. FP Subs. /Num. Total Winning Subs. |
+| -------------- | ------------- | --------------------------------------- |
+| Sector1-Level4 | 10            | 0(?)/63                                 |
+| Sector2-Level1 | 14            | 5/42                                    |
+| Sector2-Level5 | 5             | 0/44                                    |
+| Sector3-Level1 | 2             | 0/15                                    |
+| Sector3-Level2 | 5             | 13*/48                                  |
 
 *\* = Those submissions that used a different approach than those they were clustered with (e.g., a O(2^n) recursive Fibonacci implementation clustered with submissions that used an iterative O(n) approach).*
+
+*?* = Doubts concerning this figure.
 
 
 
@@ -479,6 +483,75 @@ See the [Lizard](https://github.com/terryyin/lizard) GitHub repository for tool 
 Also see [Code Complete](https://www.microsoftpressstore.com/store/code-complete-9780735619678) (p. 458) by McConnell to understand how to interpret CCN values. 
 
 ![img](https://i0.wp.com/blog.feabhas.com/wp-content/uploads/2018/07/table2.png?resize=640%2C170&ssl=1)
+
+
+
+
+
+## Questions and Doubts
+
+I do have doubts with the way that we're counting up the number false-positives. Let's take Sector1-Level4 as an example. Experiment one grouped the following four submissions into the same cluster, whereas experiment two separated them all into different clusters.
+
+Submission one:
+
+``` c#
+// User015-1
+using System;
+public class Program {
+  public static bool Puzzle(int x, int y) {
+    if(x%y==0) return true;
+    return false;
+  }
+}
+```
+
+Submission two:
+
+``` c#
+// User034-1
+using System;
+public class Program {
+  public static bool Puzzle(int x, int y) {
+    return (x+y)%y==0;
+  }
+}
+```
+
+Submission three:
+
+``` c#	
+// User 101-1
+using System;
+public class Program {
+  public static bool Puzzle(int x, int y) {
+    if(((float)x/(float)y)%1==0)
+		return true;
+		return false;
+  }
+}
+```
+
+Submission four:
+
+``` c#
+// User083-1
+using System;
+public class Program {
+  public static bool Puzzle(int x, int y) {
+    return (x%y)<=0;
+  }
+}
+```
+
+
+
+For experiment one, I considered submission three to be a false-positive because it used a different strategy than the other submissions: it used float division and then the modulo operator to check the remainder of the division. 
+
+My questions are: 
+
+**Should submission three be a FP in experiment one? **
+
+**Should submissions two-four be considered FPs in experiment two? **
 
 
 
