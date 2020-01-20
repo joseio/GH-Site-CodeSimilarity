@@ -1,6 +1,6 @@
 # <center>CodeSimilarity v. 2</center>
 
-*Last updated January 15th, 2020*
+*Last updated January 20th, 2020*
 
 
 
@@ -8,23 +8,23 @@
 
 # Contents
 
-[Synopsis](#Synopsis)
+[Synopsis](#synopsis)
 
-[Potential Applications of Tool](#Potential Applications of Tool)
+[Potential Applications of Tool](#potential-applications-of-tool)
 
-[Use Cases](#Use Cases)
+[Use Cases](#use-cases)
 
-[CodeHunt Dataset](#CodeHunt Dataset)
+[CodeHunt Dataset](#codehunt-dataset)
 
-[Preliminary Results](#Preliminary Results)
+[Preliminary Results](#preliminary-results)
 
-[Sample of Results](#Quick Peak of Sector2-Level5's Results)
+[Sample of Results](#quick-peak-of-sector2-level5s-results)
 
-[Cyclomatic Complexity Number (CCN)](#Cyclomatic Complexity Number (CCN))
+[Cyclomatic Complexity Number (CCN)](#cyclomatic-complexity-number-ccn)
 
-[Questions and Doubts](#Questions and Doubts)
+[Questions and Doubts](#questions-and-doubts)
 
-[Bugs](#Bugs)
+[Bugs](#bugs)
 
 
 
@@ -269,10 +269,12 @@ Overall, the research questions we'd like to answer in our use cases are as foll
 |     Problem     | Num. Winning/Total C# Subs. | Num. Compiling Subs. | Num. Winning/Total Java Subs. |
 | :-------------: | :-------------------------: | :------------------: | :---------------------------: |
 | Sector1-Level4  |           63/1294           |         1036         |            ?/1077             |
-| Sector2-Level1  |           42/1495           |                      |            ?/1374             |
+| Sector2-Level1  |           42/1495           |  (encounters error)  |            ?/1374             |
 | Sector2-Level5  |           44/287            |                      |             ?/247             |
 | Sector3- Level1 |           15/102            |                      |             ?/156             |
 | Sector3-Level2  |           48/287            |                      |             ?/247             |
+
+
 
 ### Problem Descriptions
 
