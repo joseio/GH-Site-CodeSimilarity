@@ -1,3 +1,4 @@
+<title>CodeSimilarity v. 2</title>
 # <center>CodeSimilarity v. 2</center>
 
 *Last updated January 20th, 2020*
@@ -12,7 +13,7 @@
 
 [Potential Applications of Tool](#potential-applications-of-tool)
 
-[Use Cases](#use-cases)
+[Use Caxses](#use-cases)
 
 [CodeHunt Dataset](#codehunt-dataset)
 
@@ -573,6 +574,26 @@ My questions are:
 **Should submission three be a FP in experiment one? **
 
 **Should submissions two-four be considered FPs in experiment two? **
+
+
+
+
+
+## Algorithm Sources
+
+[Rosetta Code](http://www.rosettacode.org/wiki/Category:Sorting_Algorithms)
+
+[Tutorials Point](tutorialspoint.com)
+
+[DSA repo](https://github.com/abdonkov/DSA/tree/master/DSA/DSA/Algorithms/Sorting)
+
+[C\# Algorithms repo](https://github.com/aalhour/C-Sharp-Algorithms/tree/master/Algorithms/Sorting)
+
+[C\# Data Structures and Algorithms Textbook](https://github.com/PacktPublishing/C-Sharp-Data-Structures-and-Algorithms/tree/master/Chapter02/SortingAlgorithms) (*)
+
+[Prof. Weiss from FIU](http://users.cis.fiu.edu/~weiss/cs/Sort.cs) (*)
+
+[C\# Star](https://www.csharpstar.com/csharp-algorithms/) (*)
 
 
 
