@@ -25,6 +25,8 @@
 
 [Questions and Doubts](#questions-and-doubts)
 
+[Algorithm Sources](#algorithm-sources)
+
 [Bugs](#bugs)
 
 
