@@ -432,7 +432,7 @@ The ideal outcome of this experiment is to produce 11 clusters (i.e., one for ea
 
 ### Results
 
-After running our tool, 39 clusters were produced. Here's a closer look into those clusters produced:![image-20200224143639294](C:\Users\rayjo\AppData\Roaming\Typora\typora-user-images\image-20200224143639294.png)
+After running our tool, 39 clusters were produced. Here's a closer look into those clusters produced:![image-20200224143639294](\images\image-20200224143639294.png)
 
 Of course, these results are less than ideal. To understand *why* more submissions implementing the same algorithm were not clustered with each other, we dug deeper. We partitioned the input space, selected one or two representative submissions from each cluster, recorded the executed LOC, array changes, and path conditions for each input partition. Again, this analysis helped us determine why/why not submissions should be clustered together based on SemCluster's definition of *strategy*. 
 
@@ -448,13 +448,13 @@ We divided the input space into the following partitions:
 
 After careful examination of the PCs, we found that the two bubble sorts (which were placed into different clusters) actually yielded equivalent PCs for every input partition. If that's the case, then **why weren't they clustered together?** We found that for the PCs where Pex created variables (e.g., `bool s0 = a[0L] < a[4L]`), Z3 was not associating the variable names (i.e., `s0`) with their corresponding values (i.e., `a[0L] < a[4L]`). This meant that two logically equivalent path conditions wouldn't be clustered if one used variables and the other did not. An example of such a case is seen in the image below:
 
-![image-20200224172323301](C:\Users\rayjo\AppData\Roaming\Typora\typora-user-images\image-20200224172323301.png)
+![image-20200224172323301](\images\image-20200224172323301.png)
 
 To resolve this, I first created a function to replace each variable with the underlying values that they hold via recursion. For instance, the last line of this PC would instead read: `&& (a[4L] < a[0L]) && !(a[0L < a[4L]])`. The function works as expected, but encounters memory problems when the number of variables to replace is too big (i.e., over 100). The sheer number of nested variables (e.g., `int s5 = s3 + s17; int s4 = s2;...int s3 = 1; int s4 = 2;`) causes the function to hang and eventually throw memory errors. 
 
 To circumvent this, we only invoke this recursive function on PCs with 100 or less variables and re-run our tool on the dataset. The results are as follow:
 
-![image-20200224201843743](C:\Users\rayjo\AppData\Roaming\Typora\typora-user-images\image-20200224201843743.png)
+![image-20200224201843743](\images\image-20200224201843743.png)
 
 
 
