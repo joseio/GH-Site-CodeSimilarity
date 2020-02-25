@@ -1,7 +1,7 @@
 <title>CodeSimilarity v. 2</title>
 # <center>CodeSimilarity v. 2</center>
 
-*Last updated January 20th, 2020*
+*Last updated February 24th, 2020*
 
 
 
@@ -11,11 +11,17 @@
 
 [Synopsis](#synopsis)
 
+[Motivating Example](#motivating-example)
+
 [Potential Applications of Tool](#potential-applications-of-tool)
 
-[Use Caxses](#use-cases)
+[Use Cases](#use-cases)
+
+[Experimental Setup](#experimental-setup)
 
 [CodeHunt Dataset](#codehunt-dataset)
+
+[Algorithmic Experiments](#algorithmic-experiments)
 
 [Preliminary Results](#preliminary-results)
 
@@ -35,12 +41,90 @@
 
 ## Synopsis:
 
-We ran the entire CodeSimilarity v.2 pipeline on only the "winning" (or correct) submissions of CodeHunt's **Sector 2 Level 5** dataset (where students found maximum difference between elements in a given integer array). By "entire pipeline" we mean:	
+We aim to cluster student programming submissions (in the homework/quiz/exam setting) by *strategy*. The strategy taken in a program lies in the way the problem space is partitioned into sub-spaces and how the problem is uniquely addressed within individual sub-spaces ([SemCluster](https://www.cs.purdue.edu/homes/roopsha/papers/semcluster_pldi2019.pdf)). More intuitively, if we had two sorting algorithms, insertion sort and bubble sort, they both have the same time complexity but employ different strategies to sort arrays. What makes the two strategies difference is the sequence in which the array elements (partitions or sub-spaces) are handled and changed. 
 
-1. Collecting all unique, concrete tests resulting from running Pex on all submissions
+To better understand what it means to cluster by strategy, we run our tool on 46 submissions, each one containing different implementations of the 11 sorting algorithms listed in the [Algorithmic Experiments](#algorithmic-experiments) section. Ideally, we want our tool to produce 11 clusters, each one containing one type of sorting algorithm. If the ideal is not obtained, then we'd need to answer the following questions:
 
- 	2. Collecting all path conditions (PCs) and symbolic return values (SRVs) from re-running Pex on all submissions, this time using only the unique, concrete tests as seeded inputs
- 	3. Clustering submissions by PCs and SRVs, according to Z3
+- *Why* are two different implementations of the same algorithm not clustered together?
+- Is there a difference between "algorithm" and "strategy"?
+- Can path conditions be used to capture program strategy?
+
+
+
+After reaching this understanding, we can compare our tool's clustering results to Microsoft's Near Duplicate Detector (a syntax-based clustering approach) and Semcluster (a sementic-based clustering approach) on the aforementioned sorting algorithms, CodeHunt, and Pex4Fun datasets.
+
+
+
+
+
+## Motivating Example:
+
+Let's examine the following student submissions to illustrate why many program clustering techniques fail to cluster programs with similar solution strategies. Then we'll see how we **expect** our technique to cluster the submissions.
+
+
+
+##### maxMinA:
+
+```c#
+// Used default min(), max() functions
+using System;
+using System.Linq;
+public class Program {
+  public static int Puzzle(int[] a) {
+    return a.Max()-a.Min();
+  }
+}
+```
+
+
+
+##### maxMinB:
+
+```c#	
+// Implemented min(), max() themselves
+using System;
+public class Program {
+  public static int Puzzle(int[] a) {
+    int min = a[0], max = a[0];
+    int i = 0, k = 0;
+    while((i + 1) != a.Length) {
+      if(a[i + 1] > max) max = a[i + 1];
+      i++;
+    }
+    while((k + 1) != a.Length) {
+      if(a[k + 1] < min) min = a[k + 1];
+      k++;
+    }
+    return max - min;
+  }
+}
+```
+
+
+
+##### maxMinC: 
+
+```c# 
+// Pairwise comparison
+using System;
+public class Program {
+  public static int Puzzle(int[] a) {
+	  int max=0;
+	  foreach(int i in a){
+      foreach(int j in a){
+        max=i-j>max?i-j:max;
+      }
+	  }
+    return max;
+  }
+}
+```
+
+
+
+A good technique would place maxMinA and maxMinB in a different cluster than maxMinC, which performs pairwise comparison between each element of  the array to compute the greatest difference. The maxMinA and maxMinB instead both first identify the largest element in the array, then the smallest element of the array, and then subtract them. 
+
+
 
 
 
@@ -228,9 +312,9 @@ We could use the [Lizard code complexity analyzer](http://www.lizard.ws/#) to es
 
 
 
-### 2. Partial credit/penalization*
+### <span style='color:green'>2. Partial credit/penalization*</span>
 
-In this use case, the instructor would use the clusters to give partial credit to submissions based on their adherence to the assignment prompt. 
+In this use case, the instructor would use the clusters to give partial credit to submissions based on their adherence to the assignment prompt. We'll focus on this in the paper.
 
 Submission **one**, we'd give the feedback: "Correct answer."
 
@@ -264,6 +348,30 @@ Overall, the research questions we'd like to answer in our use cases are as foll
 2. Does clustering by both PCs and RVs produce less false-positives than clustering by just PCs?
 
 
+
+
+
+## Experimental Setup
+
+#### Algorithms
+
+
+
+#### CodeHunt and Pex4Fun
+
+Below are the steps taken in our evaluation setup in the form of a numbered list:
+
+1. Filter out the Java submissions, keeping only the C\# ones (for Pex compatibility)
+2. Select those puzzles whose solutions feature at least one branch (so we see variance among the path conditions)
+3. Write PUTs for the selected puzzles to evaluate the student submissions against
+4. Invoke Pex on the PUTs 
+5. Collect all path conditions (PCs) and symbolic return values (SRVs) resulting from step (4)
+6. Collect all unique, concrete tests generated during step (4) and place them into a set
+  7. Invoke Pex on the PUTs, this time using only the unique, concrete tests as seeded inputs
+  8. Collect all PCs and SRVs resulting from step (7)
+  9. Parse the PCs for each submission and pass the parsed text to Z3
+  10. Build a Z3 model to perform a pairwise comparison between each submissions' PCs for each seeded input
+  11. Cluster those submissions whose PCs are logically equivalent for *every* seeded input, according to the Z3 model
 
 
 
@@ -312,6 +420,56 @@ Overall, the research questions we'd like to answer in our use cases are as foll
 
 
 
+
+
+## Algorithmic Experiments
+
+### Goal
+
+We ran our tool on 46 submissions, each one containing different implementations of the following 11 sorting algorithms: Binary insertion sort (3), bogo sort (5), buble sort (5), cocktail sort (5), cycle sort (4), heap sort (4), insertion sort (4), merge sort (4), pancake sort (3), quick sort (3), selection sort (3), shell sort (3).
+
+The ideal outcome of this experiment is to produce 11 clusters (i.e., one for each algorithm), each one containing only one type of sorting algorithm. 
+
+### Results
+
+After running our tool, 39 clusters were produced. Here's a closer look into those clusters produced:![image-20200224143639294](C:\Users\rayjo\AppData\Roaming\Typora\typora-user-images\image-20200224143639294.png)
+
+Of course, these results are less than ideal. To understand *why* more submissions implementing the same algorithm were not clustered with each other, we dug deeper. We partitioned the input space, selected one or two representative submissions from each cluster, recorded the executed LOC, array changes, and path conditions for each input partition. Again, this analysis helped us determine why/why not submissions should be clustered together based on SemCluster's definition of *strategy*. 
+
+We divided the input space into the following partitions: 
+
+* Empty int array
+* Int array of length = 1
+* Sorted ascending int array of length > 2
+* Sorted descending int array of length > 2
+* Sorted int array of length > 2 containing only elements of equal value
+
+
+
+After careful examination of the PCs, we found that the two bubble sorts (which were placed into different clusters) actually yielded equivalent PCs for every input partition. If that's the case, then **why weren't they clustered together?** We found that for the PCs where Pex created variables (e.g., `bool s0 = a[0L] < a[4L]`), Z3 was not associating the variable names (i.e., `s0`) with their corresponding values (i.e., `a[0L] < a[4L]`). This meant that two logically equivalent path conditions wouldn't be clustered if one used variables and the other did not. An example of such a case is seen in the image below:
+
+![image-20200224172323301](C:\Users\rayjo\AppData\Roaming\Typora\typora-user-images\image-20200224172323301.png)
+
+To resolve this, I first created a function to replace each variable with the underlying values that they hold via recursion. For instance, the last line of this PC would instead read: `&& (a[4L] < a[0L]) && !(a[0L < a[4L]])`. The function works as expected, but encounters memory problems when the number of variables to replace is too big (i.e., over 100). The sheer number of nested variables (e.g., `int s5 = s3 + s17; int s4 = s2;...int s3 = 1; int s4 = 2;`) causes the function to hang and eventually throw memory errors. 
+
+To circumvent this, we only invoke this recursive function on PCs with 100 or less variables and re-run our tool on the dataset. The results are as follow:
+
+![image-20200224201843743](C:\Users\rayjo\AppData\Roaming\Typora\typora-user-images\image-20200224201843743.png)
+
+
+
+**Update (02/24/2020):** 
+
+Zirui just edited the parser to force Z3 into mapping the variables to their corresponding expressions in a more elegant way than my recursive function. Because of this fix, we should no longer encounter the aforementioned memory error. 
+
+
+
+### Analyzing results
+
+See analysis of the path condition differences across different implementations [here](https://docs.google.com/presentation/d/1BPeD3sHjuqZ2z7aUnk-uZrJ79KcTVSZMu2gRvk0DYX0/edit?usp=sharing).
+
+
+
 ## Preliminary Results
 
 ### Experiment One
@@ -330,7 +488,7 @@ See [doubts surrounding Sector1-Level4 here](#Questions and Doubts) and [quick p
 
 
 
-### Experiment Two 
+### Experiment Two a[0L] < a[4L]
 
 In this experiment, we cluster the winning submissions by both their path conditions and return values.
 
@@ -433,9 +591,9 @@ public class Program {
   public static int Puzzle(int[] a) {
 	  int max=0;
 	  foreach(int i in a){
-		foreach(int j in a){
-		  max=i-j>max?i-j:max;
-	  }
+      foreach(int j in a){
+        max=i-j>max?i-j:max;
+      }
 	  }
     return max;
   }
