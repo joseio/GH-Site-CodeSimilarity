@@ -1,7 +1,7 @@
 <title>CodeSimilarity v. 2</title>
 # <center>CodeSimilarity v. 2</center>
 
-*Last updated February 24th, 2020*
+*Last updated March 2nd, 2020*
 
 
 
@@ -36,6 +36,11 @@
 [Bugs](#bugs)
 
 
+
+**TODO:** 
+
+1. Add that Microsoft's tool sucks in clustering our dataset and it's requirements to have > 20 tokens and > 0.7 metric
+   1. This is issue: imagine studentA writes long for-loop and studentB writes short C\# LINQ expression. The former may have many tokens, but the latter may not, therefore rejected by Microsoft's tool, whereas ours would cluster them together
 
 
 
@@ -432,7 +437,7 @@ The ideal outcome of this experiment is to produce 11 clusters (i.e., one for ea
 
 ### Results
 
-After running our tool, 39 clusters were produced. Here's a closer look into those clusters produced:![image-20200224143639294](\images\image-20200224143639294.png)
+After running our tool, 39 clusters were produced. Here's a closer look into those clusters produced:![image-20200224143639294](images\image-20200224143639294.png)
 
 Of course, these results are less than ideal. To understand *why* more submissions implementing the same algorithm were not clustered with each other, we dug deeper. We partitioned the input space, selected one or two representative submissions from each cluster, recorded the executed LOC, array changes, and path conditions for each input partition. Again, this analysis helped us determine why/why not submissions should be clustered together based on SemCluster's definition of *strategy*. 
 
@@ -448,19 +453,52 @@ We divided the input space into the following partitions:
 
 After careful examination of the PCs, we found that the two bubble sorts (which were placed into different clusters) actually yielded equivalent PCs for every input partition. If that's the case, then **why weren't they clustered together?** We found that for the PCs where Pex created variables (e.g., `bool s0 = a[0L] < a[4L]`), Z3 was not associating the variable names (i.e., `s0`) with their corresponding values (i.e., `a[0L] < a[4L]`). This meant that two logically equivalent path conditions wouldn't be clustered if one used variables and the other did not. An example of such a case is seen in the image below:
 
-![image-20200224172323301](\images\image-20200224172323301.png)
+![image-20200224172323301](images\image-20200224172323301.png)
 
 To resolve this, I first created a function to replace each variable with the underlying values that they hold via recursion. For instance, the last line of this PC would instead read: `&& (a[4L] < a[0L]) && !(a[0L < a[4L]])`. The function works as expected, but encounters memory problems when the number of variables to replace is too big (i.e., over 100). The sheer number of nested variables (e.g., `int s5 = s3 + s17; int s4 = s2;...int s3 = 1; int s4 = 2;`) causes the function to hang and eventually throw memory errors. 
 
 To circumvent this, we only invoke this recursive function on PCs with 100 or less variables and re-run our tool on the dataset. The results are as follow:
 
-![image-20200224201843743](\images\image-20200224201843743.png)
+![image-20200224201843743](images\image-20200224201843743.png)
 
 
 
 **Update (02/24/2020):** 
 
-Zirui just edited the parser to force Z3 into mapping the variables to their corresponding expressions in a more elegant way than my recursive function. Because of this fix, we should no longer encounter the aforementioned memory error. 
+Zirui just edited the parser to force Z3 into mapping the variables to their corresponding expressions in a more elegant way than my recursive function. Because of this fix, we no longer encounter the aforementioned memory error. 
+
+**Update (02/26/2020):**
+
+We decided to restrict the length of the input arrays from 2 to 4 (inclusive) because for for those inefficient algorithms (i.e., bogo and pancake sort), Pex generated a large number of intermediate vars (i.e., 50 to 200) on those array inputs of length >= 5. So when I passed those PCs to Z3, it seemed to be struggling to map these variables to their underlying expressions, namely in cases where you have some pc of the form:
+
+`bool s8 = a[2] > 2; bool s9 = !s8; bool s10 = s9? s7 : False; bool...`
+When I say "struggling" I mean that it truncated the results of the string -> z3 object conversion when it printed to terminal. Zirui actually let me know, though, that though it truncates in the terminal, that Z3 actually maintains the mapping internally...so restricting the limit to < 5 is no longer necessary. 
+
+
+
+#### Relaxing our Tool's Clustering Constraints (70% of PCs Match)
+
+Instead of clustering two submissions if and only if their PCs match for every valid concrete input (i.e., those that don't yield a PC of `expression too big`), we tried clustering if their PCs match for at least 70% of such inputs. We ran this experiment with our input arrays restricted to 2 <= length <= 4 and -10 <= array element value <= 10. In this experiment, 23 total clusters were formed. The results are seen below:
+
+![image-20200302201733196](images\image-20200302201733196.png)
+
+
+
+#### Relaxing our Tool's Clustering Constraints (70% of Predicates Match)
+
+Instead of clustering two submissions if and only their two PCs are proven equivalent by Z3 (i.e., Z3 deems that each of their predicates are equivalent), we tried clustering them if at least 70% of their predicates are proven equivalent by Z3. We ran this experiment with our input arrays restricted to 2 <= length <= 4 and -10 <= array element value <= 10. In this experiment, ____ clusters were produced. The results are shown below:
+
+
+
+#### Comparing our Tool's Results to the Microsof Near-Duplicate Detector's results
+
+We compared our tool's ability to cluster by strategy to [Microsoft's syntax-based near-duplicate detector](https://github.com/microsoft/near-duplicate-code-detector), and the results of how their tool performed on our dataset of algorithms is shown below:
+
+![image-20200301204509150](images\image-20200301204420980.png)
+
+
+
+We see in the above results that MIcrosoft's tool created four clusters, one of which is "pure" (i.e., comprised of one type of sorting algorithm). Some limitations of Microsoft's near-duplicate detector is that it requires the Jaccard similarity threshold to be at least 0.8 for token-sets and and 0.7 for token multi-sets; it also only runs the tool on submissions that have at least 20 tokens, as highlighted in section three of the [corresponding paper](https://arxiv.org/pdf/1812.06469.pdf). In other words, files with fewer than 20 identifier tokens are not considered duplicates and are excluded from their analysis.
 
 
 
