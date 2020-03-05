@@ -1,7 +1,7 @@
 <title>CodeSimilarity v. 2</title>
 # <center>CodeSimilarity v. 2</center>
 
-*Last updated March 2nd, 2020*
+*Last updated March 4th, 2020*
 
 
 
@@ -472,33 +472,55 @@ Zirui just edited the parser to force Z3 into mapping the variables to their cor
 We decided to restrict the length of the input arrays from 2 to 4 (inclusive) because for for those inefficient algorithms (i.e., bogo and pancake sort), Pex generated a large number of intermediate vars (i.e., 50 to 200) on those array inputs of length >= 5. So when I passed those PCs to Z3, it seemed to be struggling to map these variables to their underlying expressions, namely in cases where you have some pc of the form:
 
 `bool s8 = a[2] > 2; bool s9 = !s8; bool s10 = s9? s7 : False; bool...`
-When I say "struggling" I mean that it truncated the results of the string -> z3 object conversion when it printed to terminal. Zirui actually let me know, though, that though it truncates in the terminal, that Z3 actually maintains the mapping internally...so restricting the limit to < 5 is no longer necessary. 
+When I say "struggling" I mean that it truncated the results of the string to z3 object conversion when it printed to terminal. Zirui actually let me know, though, that though it truncates in the terminal, that Z3 actually maintains the mapping internally...so restricting the limit to < 5 is no longer necessary. 
+
+The following figure shows the results of our clustering technique. 31 clusters were formed. Here, two submissions are clustered if, for every valid concrete input, 
+
+![image-20200303163019171](images\image-20200303163019171.png)
 
 
 
-#### Relaxing our Tool's Clustering Constraints (70% of PCs Match)
+#### Relaxing our Tool's Clustering Constraints (>= 70% of PCs Match)
 
-Instead of clustering two submissions if and only if their PCs match for every valid concrete input (i.e., those that don't yield a PC of `expression too big`), we tried clustering if their PCs match for at least 70% of such inputs. We ran this experiment with our input arrays restricted to 2 <= length <= 4 and -10 <= array element value <= 10. In this experiment, 23 total clusters were formed. The results are seen below:
+Instead of clustering two submissions if and only if their PCs match for every valid concrete input (i.e., those that don't yield a PC of `expression too big`), we tried clustering if their PCs match for at least 70% of such inputs.We ran this experiment with our input arrays restricted to 2 <= length <= 4 and -10 <= array element value <= 10 to keep the runtime quick so that we can more quickly analyze the results. In this experiment, 23 total clusters were formed. The results are seen below:
 
-![image-20200302201733196](images\image-20200302201733196.png)
-
-
-
-#### Relaxing our Tool's Clustering Constraints (70% of Predicates Match)
-
-Instead of clustering two submissions if and only their two PCs are proven equivalent by Z3 (i.e., Z3 deems that each of their predicates are equivalent), we tried clustering them if at least 70% of their predicates are proven equivalent by Z3. We ran this experiment with our input arrays restricted to 2 <= length <= 4 and -10 <= array element value <= 10. In this experiment, ____ clusters were produced. The results are shown below:
+![image-20200304224538615](images\image-20200304224538615.png)
 
 
 
-#### Comparing our Tool's Results to the Microsof Near-Duplicate Detector's results
+#### Relaxing our Tool's Clustering Constraints (>= 70% of Predicates Match)
+
+Instead of clustering two submissions if and only their two PCs are proven equivalent by Z3 (i.e., Z3 deems that each of their predicates are equivalent), we tried clustering them if at least 70% of their predicates are proven equivalent by Z3. We ran this experiment with our input arrays restricted to 2 <= length <= 4 and -10 <= array element value <= 10 to keep the runtime quick so that we can more quickly analyze the results. In this experiment, 24 clusters were produced. The results are shown below: 
+
+![image-20200304191056567](images\image-20200304191056567.png)
+
+
+
+#### Relaxing our Tool's Clustering Constraints (>= 60% of Predicates Match)
+
+We relaxed the constraints even more to see how considering two PCs to be equivalent if at least 60% of their predicates matched would affect our results. Again, we ran this experiment with our input arrays restricted to 2 <= length <= 4 and -10 <= array element value <= 10 to keep the runtime quick so that we can more quickly analyze the results. In this experiment, 16 clusters were produced. The results are shown below:
+
+![image-20200304224637208](images\image-20200304224637208.png)
+
+
+
+#### Relaxing our Tool's Clustering Constraints (>= 70% of Predicates and >= 70% of PCs Match)
+
+We ran another experiment that clusters two submissions if at least 70% of the PC's predicates match for at least 70% of the PCs over all valid, concrete inputs. We, again, ran this experiment with our input arrays restricted to 2 <= length <= 4 and -10 <= array element value <= 10 to keep the runtime quick so that we can more quickly analyze the results. In this experiment, 18 clusters were produced. The results are shown below:
+
+![image-20200304224705163](images\image-20200304224705163.png)
+
+
+
+#### Comparing our Tool's Results to the Microsoft Near-Duplicate Detector's results
 
 We compared our tool's ability to cluster by strategy to [Microsoft's syntax-based near-duplicate detector](https://github.com/microsoft/near-duplicate-code-detector), and the results of how their tool performed on our dataset of algorithms is shown below:
 
-![image-20200301204509150](images\image-20200301204420980.png)
+![image-20200304224449211](images\image-20200304224449211.png)
 
 
 
-We see in the above results that MIcrosoft's tool created four clusters, one of which is "pure" (i.e., comprised of one type of sorting algorithm). Some limitations of Microsoft's near-duplicate detector is that it requires the Jaccard similarity threshold to be at least 0.8 for token-sets and and 0.7 for token multi-sets; it also only runs the tool on submissions that have at least 20 tokens, as highlighted in section three of the [corresponding paper](https://arxiv.org/pdf/1812.06469.pdf). In other words, files with fewer than 20 identifier tokens are not considered duplicates and are excluded from their analysis.
+We see in the above results that Microsoft's tool created four clusters, one of which is "pure" (i.e., comprised of one type of sorting algorithm). Some limitations of Microsoft's near-duplicate detector is that it requires the Jaccard similarity threshold to be at least 0.8 for token-sets and and 0.7 for token multi-sets; it also only runs the tool on submissions that have at least 20 tokens, as highlighted in section three of the [corresponding paper](https://arxiv.org/pdf/1812.06469.pdf). In other words, files with fewer than 20 identifier tokens are not considered duplicates and are excluded from their analysis.
 
 
 
