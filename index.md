@@ -1,7 +1,7 @@
 <title>CodeSimilarity v. 2</title>
 # <center>CodeSimilarity v. 2</center>
 
-*Last updated March 4th, 2020*
+*Last updated March 18th, 2020*
 
 
 
@@ -480,39 +480,52 @@ The following figure shows the results of our clustering technique. 31 clusters 
 
 
 
-#### Relaxing our Tool's Clustering Constraints (>= 70% of PCs Match)
+#### A. Relaxing our Tool's Clustering Constraints (>= 70% of PCs Match)
 
 Instead of clustering two submissions if and only if their PCs match for every valid concrete input (i.e., those that don't yield a PC of `expression too big`), we tried clustering if their PCs match for at least 70% of such inputs.We ran this experiment with our input arrays restricted to 2 <= length <= 4 and -10 <= array element value <= 10 to keep the runtime quick so that we can more quickly analyze the results. In this experiment, 23 total clusters were formed. The results are seen below:
 
-![image-20200304224538615](images\image-20200304224538615.png)
+![image-20200309165740134](images\image-20200309165740134.png)
 
 
 
-#### Relaxing our Tool's Clustering Constraints (>= 70% of Predicates Match)
+#### B. Relaxing our Tool's Clustering Constraints (>= 70% of Predicates Match)
 
 Instead of clustering two submissions if and only their two PCs are proven equivalent by Z3 (i.e., Z3 deems that each of their predicates are equivalent), we tried clustering them if at least 70% of their predicates are proven equivalent by Z3. We ran this experiment with our input arrays restricted to 2 <= length <= 4 and -10 <= array element value <= 10 to keep the runtime quick so that we can more quickly analyze the results. In this experiment, 24 clusters were produced. The results are shown below: 
 
-![image-20200304191056567](images\image-20200304191056567.png)
+![image-20200309165700033](images\image-20200309165700033.png)
 
+You'll see that the difference between between the results from experiments B and C is that the former clusters two binary insertion sort algorithm implementations, whereas the latter does not cluster any binary insertion sort implementations together. 
 
-
-#### Relaxing our Tool's Clustering Constraints (>= 60% of Predicates Match)
+#### C. Relaxing our Tool's Clustering Constraints (>= 60% of Predicates Match)
 
 We relaxed the constraints even more to see how considering two PCs to be equivalent if at least 60% of their predicates matched would affect our results. Again, we ran this experiment with our input arrays restricted to 2 <= length <= 4 and -10 <= array element value <= 10 to keep the runtime quick so that we can more quickly analyze the results. In this experiment, 16 clusters were produced. The results are shown below:
 
-![image-20200304224637208](images\image-20200304224637208.png)
+![image-20200309165625678](images\image-20200309165625678.png)
 
+Some differences spotted between experiment C's results and the results from the previous experiments include: 
 
+* Diff. b/t this and >=70% **PC** clustering is the underlined 2 clustered binary insertion sorts. This >=60% preds clusters them together whereas the other does not cluster any binary insertion sort implementations together
+* Diff. b/t this and >= 70% preds is that this one clusters 4 insertion and 3 selection, whereas the latter clusters only 3 insertion and 2 selection sorts together
+* Diff b/t this and >= 70% preds is underlined 4 clustered cocktail sorts. The latter only clusters 3 cocktails together
+* Diff b/t this and >= 70% preds is underlined 2 pancake sorts. This one clusters only 2, whereas the latter clusters 3 together
 
-#### Relaxing our Tool's Clustering Constraints (>= 70% of Predicates and >= 70% of PCs Match)
+#### D. Relaxing our Tool's Clustering Constraints (>= 70% of Predicates and >= 70% of PCs Match)
 
 We ran another experiment that clusters two submissions if at least 70% of the PC's predicates match for at least 70% of the PCs over all valid, concrete inputs. We, again, ran this experiment with our input arrays restricted to 2 <= length <= 4 and -10 <= array element value <= 10 to keep the runtime quick so that we can more quickly analyze the results. In this experiment, 18 clusters were produced. The results are shown below:
 
-![image-20200304224705163](images\image-20200304224705163.png)
+![image-20200309165548622](images\image-20200309165548622.png)
 
 
 
-#### Comparing our Tool's Results to the Microsoft Near-Duplicate Detector's results
+#### E. Relaxing our Tool's Clustering Constraints (>= 80% of Predicates and >= 80% of PCs Match)
+
+We ran another experiment that clusters two submissions if at least 80% of the PC's predicates match for at least 80% of the PCs over all valid, concrete inputs. We, again, ran this experiment with our input arrays restricted to 2 <= length <= 4 and -10 <= array element value <= 10 to keep the runtime quick so that we can more quickly analyze the results. In this experiment, 25 clusters were produced. The results are shown below:
+
+![image-20200309165456621](images\image-20200309165456621.png)
+
+
+
+#### F. Comparing our Tool's Results to the Microsoft Near-Duplicate Detector's results
 
 We compared our tool's ability to cluster by strategy to [Microsoft's syntax-based near-duplicate detector](https://github.com/microsoft/near-duplicate-code-detector), and the results of how their tool performed on our dataset of algorithms is shown below:
 
@@ -526,7 +539,11 @@ We see in the above results that Microsoft's tool created four clusters, one of 
 
 ### Analyzing results
 
-See analysis of the path condition differences across different implementations [here](https://docs.google.com/presentation/d/1BPeD3sHjuqZ2z7aUnk-uZrJ79KcTVSZMu2gRvk0DYX0/edit?usp=sharing).
+Let's look at (E) above and see why all but one insertion sort implementations were clustered together. 
+
+
+
+For more analysis of the path condition differences across different implementations [here](https://docs.google.com/presentation/d/1BPeD3sHjuqZ2z7aUnk-uZrJ79KcTVSZMu2gRvk0DYX0/edit?usp=sharing).
 
 
 
@@ -822,3 +839,15 @@ My questions are:
 ## Bugs
 
 Skipping <u>Sector1-Level6</u> b/c it's giving issues with parsing unicode characters and `string.Contains()`. <u>Sector2-Level3</u> had issues implementing the `String` methods, which was impacting clustering results...so we'll skip this as well. Also <u>Sector2-Level4</u> was running `cluster.py` for 3 days and still hasn't finish...so I will also skip this one. 
+
+
+
+## Bugs Fixed
+
+March 18th, 2020:
+
+Found a bug where preambles were getting added to our path conditions. This was particularly problematic when the preamble included an arithmetic expression, for example:
+
+![image-20200318170942411](C:\Users\rayjo\Documents\GitHub\CodeSimilarity Documentation\CodeSimilarity-v.2\images\image-20200318170942411.png)
+
+Fixed bug by not adding preamble to PC.
