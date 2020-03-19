@@ -846,8 +846,8 @@ Skipping <u>Sector1-Level6</u> b/c it's giving issues with parsing unicode chara
 
 March 18th, 2020:
 
-Found a bug where preambles were getting added to our path conditions. This was particularly problematic when the preamble included an arithmetic expression, for example:
+Found a bug where preambles with `&&` operators were getting split up, which affected our clustering results. Here's an example of a preamble that would cause issues:
 
-![image-20200318170942411](C:\Users\rayjo\Documents\GitHub\CodeSimilarity Documentation\CodeSimilarity-v.2\images\image-20200318170942411.png)
+PC1 = ` bool s0 = a[0] > a[1]; bool s1 = s0 && a[2] > a[1]; return 5`
 
-Fixed bug by not adding preamble to PC.
+The above expression for`s1` would get split into two terms, which in many cases is undesirable. Fixed this bug by not splitting up preamble expressions.
