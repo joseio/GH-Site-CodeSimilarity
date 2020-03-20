@@ -1,7 +1,7 @@
 <title>CodeSimilarity v. 2</title>
 # <center>CodeSimilarity v. 2</center>
 
-*Last updated March 18th, 2020*
+*Last updated March 19th, 2020*
 
 
 
@@ -839,6 +839,12 @@ My questions are:
 ## Bugs
 
 Skipping <u>Sector1-Level6</u> b/c it's giving issues with parsing unicode characters and `string.Contains()`. <u>Sector2-Level3</u> had issues implementing the `String` methods, which was impacting clustering results...so we'll skip this as well. Also <u>Sector2-Level4</u> was running `cluster.py` for 3 days and still hasn't finish...so I will also skip this one. 
+
+
+
+March 19th, 2020:
+
+One merge sort (User007-attempt001) and two binary insertion sorts (User000-attempt000, User000-attempt001) had `Array.Copy`. This gives Pex problems with tracking because it cannot map the result of `Array.Copy()` back to the original input array. To remedy this, I tried replacing the `Array.Copy()` with traditional for-loops. This was taking too long to debug, so I decided to not consider these three implementations in the approach for now.
 
 
 
