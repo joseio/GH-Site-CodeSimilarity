@@ -846,6 +846,10 @@ March 19th, 2020:
 
 One merge sort (User007-attempt001) and two binary insertion sorts (User000-attempt000, User000-attempt001) had `Array.Copy`. This gives Pex problems with tracking because it cannot map the result of `Array.Copy()` back to the original input array. To remedy this, I tried replacing the `Array.Copy()` with traditional for-loops. This was taking too long to debug, so I decided to not consider these three implementations in the approach for now.
 
+April 15th, 2020:
+
+Skipping <u>Sector3-Level5</u> because the puzzles return `int[][]`, which Pex cannot implicitly cast to a Path Condition string. I'm sure a clever workaround could be fashioned, but I will not spend time on that at this time.
+
 
 
 ## Bugs Fixed
