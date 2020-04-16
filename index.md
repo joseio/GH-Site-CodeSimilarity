@@ -390,24 +390,21 @@ Below are the steps taken in our evaluation setup in the form of a numbered list
 | Sector3- Level1 |           15/102            |                      |             ?/156             |
 | Sector3-Level2  |           48/287            |                      |             ?/247             |
 
-<span style='color:red'>TODO:</span> Evaluate the following CodeHunt puzzles w/ >= 1 branches in solution:
+<span style='color:red'>TODO:</span> Evaluate the following CodeHunt puzzles w/ >= 1 branches in solution (and don't cause issues...see "Bugs" section at bottom of page):
 
-- Sector1-Level6
 - Sector2-Level1
 - Sector2-Level2
-- Sector2-Level3
-- Sector2-Level4
 - Sector2-Level5
 - Sector2-Level6
 - Sector3-Level1
 - Sector3-Level2
 - Sector3-Level3
-- Sector3-Level5
 - Sector3-Level6
 - Sector4-Level2
 - Sector4-Level3
 - Sector4-Level4
 - Sector4-Level6
+- Sector9-Level1 (Algorithms dataset)
 
 
 
