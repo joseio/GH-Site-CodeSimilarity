@@ -390,41 +390,123 @@ Below are the steps taken in our evaluation setup in the form of a numbered list
 | Sector3- Level1 |           15/102            |                      |             ?/156             |
 | Sector3-Level2  |           48/287            |                      |             ?/247             |
 
-<span style='color:red'>TODO:</span> Evaluate the following CodeHunt puzzles w/ >= 1 branches in solution (and don't cause issues...see "Bugs" section at bottom of page):
-
-- Sector2-Level1
-- Sector2-Level2
-- Sector2-Level5
-- Sector2-Level6
-- Sector3-Level1
-- Sector3-Level2
-- Sector3-Level3
-- Sector3-Level6
-- Sector4-Level2
-- Sector4-Level3
-- Sector4-Level4
-- Sector4-Level6
-- Sector9-Level1 (Algorithms dataset)
 
 
+### CodeHunt Problem Descriptions
 
-### Problem Descriptions
+All of the CodeHunt puzzles evaluated have clear problem statements and are listed below:
 
-**Sector1-Level4: **Test if a number is a multiple of another number.
+- Sector2-Level1: Compute average of a list of numbers, rounded to closest integer
+- Sector2-Level2: Count the depth of nesting parentheses in a string
+- Sector2-Level5: Find maximum difference between 2 elements in an array
+- Sector2-Level6: Generate the string of binary digits for n
+- Sector3-Level1: Filter retaining only values >= threshold -- a crude noise filter
+- Sector3-Level2: Compute sum of n-th and n-1st Fibonacci numbers
+- Sector3-Level3: Find k-th largest element in an array
+- Sector3-Level6: Compute the set difference of a\b
+- Sector4-Level2: Compute n choose m, i.e. n!/(m! * (n-m)!)
+- Sector4-Level3: Given int array inputs a and f , apply b[i] = f[a[i]] and return b
+- Sector4-Level4: Return the (first) value with the most number of 1's in its binary representation
+- Sector4-Level6: Advance each character in a string by the Fibonacci number evaluated at that character's integer ASCII value
+- Sector9-Level1 (Algorithms dataset): Implement a sorting algorithm to sort an integer input array in ascending order
 
-**Sector2-Level1: **Compute average of a list of numbers, rounded to closest integer.
-
-**Sector2-Level5: **Find maximum difference between 2 elements in an array.
-
-**Sector3-Level1: **Filter retaining only values >= threshold (a crude noise filter).
-
-**Sector3-Level2: **Compute sum of n-th and (n-1)st Fibonacci numbers.
 
 
+### Pex4Fun Problem Descriptions
+
+Below are the descriptions of the puzzles that explicitly featured problem statements in them:
+
+* 33: Use a while loop to count the number of digits in the input number x
+* 35: Given an integer as input, return a list of multiples of the input that are less than the input squared
+* 37: Display the results of integer division
+* 39: Print the letters in the English alphabet
+* 40: Counting the number of occurrences of the letter "a" in the input string
+* 47: Sum the even-indexed numbers in the input array
+* 64: Check if an input integer represents a "fancy year," a year whose digits have all the same number
+* 65: Given three sides of a shape, figure out which two sides add to equal the remaining side squared
+* 135:  Find the last index of x in an input array
+
+An interesting thing I noticed in the dataset is that sometimes the instructions explicitly state how the students should solve the problems (e.g., with or without a while-loop), but many students disregard these instructions and still end up getting the answer correct (e.g., puzzle 33). 
+
+#### Puzzles to be discarded
+
+We examined the  instructor solutions for each of the Pex4Fun puzzles to find those with unclear problem statements. We also examined the student submissions to find any puzzles for which they blatantly tried to guess and check to arrive at the right answer, in which case we would remove that puzzles from our evaluation, since this behavior is not representative of the typical CS education classroom. The puzzles in question are as follows:
+
+* Also, instructions explicitly say to use "while-loop," but many students didn't do so and still got answer correct
+
+* 37: Students (i.e., "rockrose") just guesses and checks...not representative
+* 39: Students (i.e., "Sadlic") just guesses and checks...not representative
+* 56: Many students did guess and check, also our evaluation subjects may contain incorrect submissions, since we assume that each student's last submission is correct...not always true, which is apparent in this puzzle
+* 106: Many of the winning answers don't even involve a branch
+
+
+
+### Peking University Dataset
+
+Many of the correct student submissions failed to compile after they were converted from C/C++ to C#. The most common reason for these compilation failures were things like incorrect data types in method signatures, method bodies, and also visibility issues (i.e., public, private, static methods and classes). I cleaned the dataset to fit my needs, such that the subjects that I evaluate are clean and able to be compiled. Here are some stats on how many correct, non-compiling submissions I needed to filter out of each puzzle to perform the above cleaning:
+
+* Hw1: 55 (of a total 118) submissions removed
+* Hw2: 111 (of a total 321) submissions removed
+* Hw3: 101 (of total 641) submissions removed
+* Hw4: 76 (of total 89) submissions removed
+
+
+
+Actually, due to the bug (listed in the bugs section at bottom of page), we are removing Hw4 from our evaluation, since it caused our clustering algorithm to hang for way too long.
+
+
+
+**Important:** to set threshold as 538 for all three homework problems, because the code all had same classes at the bottom of each file which dupFinder was clustering together. Thresholds of 538 and below were those that only the classes and small segments of their code was duplicate. Submissions with values of 538 and above were true syntactic duplicates. No two clusters have the same submissions, I manually verified this.
+
+
+
+\* *Note:* 'o' = our tool, 'd' = dupFinder, 'n' = near dupe
+
+| Assignment | Cluster 1 (o/d/n) | Cluster 2 (o/d/n) | Cluster 3 (o/d/n) | Cluster 4 (o/d/n) | Cluster 5 (o/d/n) |
+| :--------: | :---------------: | :---------------: | :---------------: | :---------------: | :---------------: |
+| Homework 1 |      62/55/0      |       1/2/0       |       0/0/0       |       0/0/0       |       0/0/0       |
+| Homework 2 |      204/0/0      |       6/0/0       |       0/0/0       |       0/0/0       |       0/0/0       |
+| Homework 3 |      517/0/0      |       9/0/0       |       0/0/0       |       0/0/0       |       0/0/0       |
 
 
 
 ## Algorithmic Experiments
+
+### Dataset
+
+First, we visited [RosettaCode](http://www.rosettacode.org/wiki/Category:Sorting_Algorithms) to get a list of sorting algorithms (last comprehensive list of them). Then we searched each one on Google for C# implementations for the first three pages of results. We selected the algorithms that we were able to get more than five visually different C# implementations for. Sorting algorithms on RosettaCode:
+
+\* Note:  ✓ = included in dataset, ✗ = not included in dataset
+
+- Bead sort ([1](https://www.programmingalgorithms.com/algorithm/bead-sort/)) ✗
+
+
+- Binary Insertion Sort...not in Rosetta Code...remove from dataset ✗
+- Bogosort ([1](https://rosettacode.org/wiki/Sorting_algorithms/Bogosort#C.23), [2](https://github.com/mariansam/Bogosort.NET/blob/master/Bogosort/Bogosort.cs), [3](http://www.siafoo.net/snippet/213), [4](https://www.programmingalgorithms.com/algorithm/bogo-sort/), [5](https://programm.top/en/c-sharp/algorithm/array-sort/bogosort/))...✗ <-- I need to delete this from dataset... ✗
+  - To remove dupes: 2
+- **Bubble sort** ([1](https://codereview.stackexchange.com/questions/142720/bubble-sort-in-c), [2](http://www.rosettacode.org/wiki/Sorting_algorithms/Bubble_sort#C.23), [3](https://www.csharpstar.com/csharp-program-to-perform-bubble-sort/), [4](https://www.geeksforgeeks.org/bubble-sort/), [5](https://github.com/abdonkov/DSA/blob/master/DSA/DSA/Algorithms/Sorting/BubbleSorter.cs), [6](https://en.wikibooks.org/wiki/Algorithm_Implementation/Sorting/Bubble_sort#C#)) ✓
+- Circle Sort (nothing) ✗
+- Cocktail sort ([1](https://exceptionnotfound.net/cocktail-shaker-sort-csharp-the-sorting-algorithm-family-reunion/), [2](http://www.rosettacode.org/wiki/Sorting_algorithms/Cocktail_sort#C.23), [3](https://www.geeksforgeeks.org/cocktail-sort/), [4](https://www.growingwiththeweb.com/2016/04/cocktail-sort.html), [5](https://www.programmingalgorithms.com/algorithm/cocktail-shaker-sort/)) <-- I need to delete this from dataset... ✗
+- Comb sort  ([1](https://buffered.io/posts/sorting-algorithms-the-comb-sort/), [2](https://gist.github.com/PhearTheCeal/4643988), [3](https://rosettacode.org/wiki/Sorting_algorithms/Comb_sort#C.23), [4](https://www.geeksforgeeks.org/comb-sort/)) ✗
+- Counting sort  ([1](http://algorithmsandstuff.blogspot.com/2014/07/counting-sort-in-c-sharp.html), [2](https://www.geeksforgeeks.org/counting-sort/), [3](https://rosettacode.org/wiki/Sorting_algorithms/Counting_sort, [4](http://www.programming-algorithms.net/article/40549/Counting-sort), [6](https://www.alphacodingskills.com/cs/pages/cs-program-for-counting-sort.php))  ✗
+- Cycle sort ([1](https://riptutorial.com/algorithm/example/24968/csharp-implementation), [2](http://www.algostructure.com/sorting/cyclesort.php), [3](https://github.com/aalhour/C-Sharp-Algorithms/blob/master/Algorithms/Sorting/CycleSorter.cs#L44), [4](https://www.geeksforgeeks.org/cycle-sort/))  <-- I need to delete this from dataset... ✗
+- Gnome sort ([1](https://www.programmingalgorithms.com/algorithm/gnome-sort/), [2](https://exceptionnotfound.net/gnome-sort-csharp-the-sorting-algorithm-family-reunion/), [3](https://rosettacode.org/wiki/Sorting_algorithms/Gnome_sort#C.23), [4](https://programm.top/en/c-sharp/algorithm/array-sort/gnome-sort/)) ✗
+- **Heapsort** ([1](https://github.com/abdonkov/DSA/blob/master/DSA/DSA/Algorithms/Sorting/HeapSorter.cs), [2](http://www.rosettacode.org/wiki/Sorting_algorithms/Heapsort#C.23), [3](http://users.cis.fiu.edu/~weiss/cs/Sort.cs), [4](https://github.com/aalhour/C-Sharp-Algorithms/blob/master/Algorithms/Sorting/HeapSorter.cs), [5](https://www.tutorialspoint.com/heap-sort-in-chash), [6](https://www.growingwiththeweb.com/2012/11/algorithm-heapsort.html)) ✓
+- **Insertion sort** ([1](https://github.com/abdonkov/DSA/blob/master/DSA/DSA/Algorithms/Sorting/InsertionSorter.cs), [2](http://www.rosettacode.org/wiki/Sorting_algorithms/Insertion_sort#C.23), [3](https://github.com/aalhour/C-Sharp-Algorithms/blob/master/Algorithms/Sorting/InsertionSorter.cs), [4](https://github.com/PacktPublishing/C-Sharp-Data-Structures-and-Algorithms/blob/master/Chapter02/SortingAlgorithms/InsertionSort.cs), [5](https://www.tutorialspoint.com/insertion-sort-in-chash), [6](https://www.w3resource.com/csharp-exercises/searching-and-sorting-algorithm/searching-and-sorting-algorithm-exercise-6.php)) ✓
+- **Merge sort** ([1](https://github.com/abdonkov/DSA/blob/master/DSA/DSA/Algorithms/Sorting/MergeSorter.IList.cs), [2](https://programm.top/en/c-sharp/algorithm/array-sort/merge-sort/), [3](https://www.w3resource.com/csharp-exercises/searching-and-sorting-algorithm/searching-and-sorting-algorithm-exercise-7.php), [4](http://users.cis.fiu.edu/~weiss/cs/Sort.cs), [5](https://www.c-sharpcorner.com/blogs/a-simple-merge-sort-implementation-c-sharp), [6](https://codeburst.io/stupids-guide-to-merge-sorting-algorithm-dfeca6094d7f)) ✓
+- Pancake sort ([1](https://www.geeksforgeeks.org/pancake-sorting/), [2](http://www.rosettacode.org/wiki/Sorting_algorithms/Pancake_sort#C.23), [3](https://tutorialspoint.dev/algorithm/sorting-algorithms/pancake-sorting))   <-- I need to delete this from dataset... ✗
+- Patience sort (nothing) ✗
+- Permutation sort (aka BogoSort) ✗
+- **Quicksort** ([1](https://github.com/abdonkov/DSA/blob/master/DSA/DSA/Algorithms/Sorting/QuickSorter.cs), [2](http://www.rosettacode.org/wiki/Sorting_algorithms/Quicksort#C.23), [3](https://github.com/aalhour/C-Sharp-Algorithms/blob/master/Algorithms/Sorting/QuickSorter.cs))...extra not yet in dataset: [extra1](https://www.w3resource.com/csharp-exercises/searching-and-sorting-algorithm/searching-and-sorting-algorithm-exercise-9.php), [extra2](http://csharpexamples.com/c-quick-sort-algorithm-implementation/), [extra3](https://gist.github.com/lbsong/6833729) ✓
+- Radix sort ([1](https://www.geeksforgeeks.org/radix-sort/), [2](https://rosettacode.org/wiki/Sorting_algorithms/Radix_sort#C.23), [3](https://www.codeproject.com/Articles/32382/Radix-Sorting-Implementation-with-C), [4](http://algorithmsandstuff.blogspot.com/2014/06/radix-sort-in-c-sharp.html)) ✗
+- Selection sort ([1](https://github.com/aalhour/C-Sharp-Algorithms/blob/master/Algorithms/Sorting/SelectionSorter.cs), [2](https://github.com/PacktPublishing/C-Sharp-Data-Structures-and-Algorithms/blob/master/Chapter02/SortingAlgorithms/SelectionSort.cs), [3](https://www.csharpstar.com/c-program-to-perform-selection-sort/))  <-- I need to delete this from dataset... ✗
+- Shell sort ([2](http://www.rosettacode.org/wiki/Sorting_algorithms/Shell_sort#C.23), [3](https://www.tutorialspoint.com/shell-sort-program-in-chash)) ...extra not yet in dataset: [extra1](http://users.cis.fiu.edu/~weiss/cs/Sort.cs), [extra2](https://github.com/aalhour/C-Sharp-Algorithms/blob/master/Algorithms/Sorting/ShellSorter.cs), [extra3](https://github.com/abdonkov/DSA/blob/master/DSA/DSA/Algorithms/Sorting/ShellSorter.cs) <-- I need to delete this from dataset... ✗
+- Sleep sort ([1](http://www.rosettacode.org/wiki/Sorting_algorithms/Sleep_sort#C.23)) ✗
+- Stooge sort ([1](http://www.rosettacode.org/wiki/Sorting_algorithms/Stooge_sort#C.23)) ✗
+- Strand sort (none) ✗
+- Tree sort on a linked list (none)
+
+
 
 ### Goal
 
@@ -433,6 +515,26 @@ We ran our tool on 46 submissions, each one containing different implementations
 The ideal outcome of this experiment is to produce 11 clusters (i.e., one for each algorithm), each one containing only one type of sorting algorithm. 
 
 ### Results
+
+We narrowed down the algorithms that we're evaluating such that we now have Bubble, heap, insertion, merge, and quick sort, each one having **six** total implementations.
+
+We ran our tool on the algorithms dataset, then ran the JetBrains dupFinder and MIcrosoft CodeClone tools on the equivalence classes that our tool produced and got the following results:
+
+\* *Note:* 'o' = our tool, 'd' = dupFinder, 'n' = near dupe
+
+|   Algorithm    | Cluster 1 (o/d/n) | Cluster 2 (o/d/n) | Cluster 3 (o/d/n) | Cluster 4 (o/d/n) | Cluster 5 (o/d/n) | Cluster 6 (o/d/n) |
+| :------------: | :---------------: | :---------------: | :---------------: | :---------------: | :---------------: | :---------------: |
+|  Bubble Sort   |       6/1/5       |       0/1/1       |       0/1/0       |       0/1/0       |       0/1/0       |       0/1/0       |
+|   Heap Sort    |       1/1/1       |       1/1/1       |       1/1/1       |       1/1/1       |       1/1/1       |       1/1/1       |
+| Insertion Sort |       5/1/3       |       1/1/1       |       0/1/1       |       0/1/1       |       0/1/0       |       0/1/0       |
+|   Merge Sort   |       1/1/1       |       1/1/1       |       1/1/1       |       3/1/1       |      0 /1/1       |       0/1/1       |
+|   Quick Sort   |       1/1/1       |       1/1/        |       1/1/1       |       2/1/1       |       1/1/1       |       0/1/1       |
+
+
+
+
+
+###### The results below are outdated
 
 After running our tool, 39 clusters were produced. Here's a closer look into those clusters produced:![image-20200224143639294](images\image-20200224143639294.png)
 
@@ -846,6 +948,10 @@ One merge sort (User007-attempt001) and two binary insertion sorts (User000-atte
 April 15th, 2020:
 
 Skipping CodeHunt's <u>Sector3-Level5</u> and Pex4Fun's puzzle numbers <u>123</u>, <u>124</u>,  because the puzzles return `int[][]`, which Pex cannot implicitly cast to a Path Condition string. I'm sure a clever workaround could be fashioned, but I will not spend time on that at this time.
+
+April 22nd, 2020:
+
+Skipping PKU's hw4 because it was taking *way* to long to cluster. This puzzle only 13 students being evaluated, but `cluster.py` ran on the order of several hours...so I'll skip this one as well.
 
 
 
