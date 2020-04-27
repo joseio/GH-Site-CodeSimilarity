@@ -368,8 +368,8 @@ Below are the steps taken in our evaluation setup in the form of a numbered list
 
 1. Filter out the Java submissions, keeping only the C\# ones (for Pex compatibility)
 2. Select those puzzles whose solutions feature at least one branch (so we see variance among the path conditions)
-3. Write PUTs for the selected puzzles to evaluate the student submissions against
-4. Invoke Pex on the PUTs 
+3. Write PUT wrappers for the selected puzzles to evaluate the student submissions against
+4. Invoke Pex on the PUT wrappers 
 5. Collect all path conditions (PCs) and symbolic return values (SRVs) resulting from step (4)
 6. Collect all unique, concrete tests generated during step (4) and place them into a set
   7. Invoke Pex on the PUTs, this time using only the unique, concrete tests as seeded inputs
@@ -456,7 +456,7 @@ Actually, due to the bug (listed in the bugs section at bottom of page), we are 
 
 
 
-**Important:** to set threshold as 538 for all three homework problems, because the code all had same classes at the bottom of each file which dupFinder was clustering together. Thresholds of 538 and below were those that only the classes and small segments of their code was duplicate. Submissions with values of 538 and above were true syntactic duplicates. No two clusters have the same submissions, I manually verified this.
+**Important:** Instead of setting thresholds, I copied the directories and cleaned the submissions such that they no longer contain the duplicate class. So then I re-ran dupFinder and Near Dupe on these cleaned submissions. Note: In tables in paper, "6x2" means that there were six clusters produced by the syntactic tool, each having two submissions inside.
 
 
 
@@ -951,7 +951,11 @@ Skipping CodeHunt's <u>Sector3-Level5</u> and Pex4Fun's puzzle numbers <u>123</u
 
 April 22nd, 2020:
 
-Skipping PKU's hw4 because it was taking *way* to long to cluster. This puzzle only 13 students being evaluated, but `cluster.py` ran on the order of several hours...so I'll skip this one as well.
+Skipping PKU's hw4 because it was taking *way* to long to cluster. This puzzle only 13 students being evaluated, but `cluster.py` ran on the order of several hours...so I'll skip this one as well. 
+
+April 25th, 2020:
+
+We're also skipping Pex4Fun's puzzle 37, 39, 41, 44, 46, 56, 106, and 109, 133. For some of them, it's because our tool failed to produce clusters for...I can't remember precisely why we ignore others, but it likely has to do with our tool not being able to execute `runseed.py` or `cluster.py` on them. I'll look back into it later.
 
 
 
