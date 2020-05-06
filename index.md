@@ -23,6 +23,8 @@
 
 [Algorithmic Experiments](#algorithmic-experiments)
 
+[Taxonomy](#taxonomy)
+
 [Preliminary Results](#preliminary-results)
 
 [Sample of Results](#quick-peak-of-sector2-level5s-results)
@@ -382,13 +384,20 @@ Below are the steps taken in our evaluation setup in the form of a numbered list
 
 ## CodeHunt Dataset
 
-|     Problem     | Num. Winning/Total C# Subs. | Num. Compiling Subs. | Num. Winning/Total Java Subs. |
-| :-------------: | :-------------------------: | :------------------: | :---------------------------: |
-| Sector1-Level4  |           63/1294           |         1036         |            ?/1077             |
-| Sector2-Level1  |           42/1495           |  (encounters error)  |            ?/1374             |
-| Sector2-Level5  |           44/287            |                      |             ?/247             |
-| Sector3- Level1 |           15/102            |                      |             ?/156             |
-| Sector3-Level2  |           48/287            |                      |             ?/247             |
+|     Problem     | Num. Winning/Total C# Subs. | Num. Winning/Total Java Subs. |
+| :-------------: | :-------------------------: | :---------------------------: |
+| Sector2-Level1  |           42/1495           |            15/1374            |
+| Sector2-Level2  |           48/767            |            79/739             |
+| Sector2-Level5  |           44/287            |            55/247             |
+| Sector2-Level6  |           55/249            |            48/334             |
+| Sector3- Level1 |           15/102            |            22/156             |
+| Sector3-Level2  |           48/259            |            51/207             |
+| Sector3-Level3  |           13/255            |            24/255             |
+| Sector3-Level6  |           32/178            |            18/229             |
+| Sector4-Level2  |           10/128            |             7/126             |
+| Sector4-Level3  |            4/72             |             5/125             |
+| Sector4-Level4  |            8/732            |            12/427             |
+| Sector4-Level6  |            10/61            |            15/163             |
 
 
 
@@ -412,7 +421,9 @@ All of the CodeHunt puzzles evaluated have clear problem statements and are list
 
 
 
-### Pex4Fun Problem Descriptions
+### Pex4Fun Dataset
+
+*Note:* Dataset in paper
 
 Below are the descriptions of the puzzles that explicitly featured problem statements in them:
 
@@ -474,7 +485,7 @@ Actually, due to the bug (listed in the bugs section at bottom of page), we are 
 
 ### Dataset
 
-First, we visited [RosettaCode](http://www.rosettacode.org/wiki/Category:Sorting_Algorithms) to get a list of sorting algorithms (last comprehensive list of them). Then we searched each one on Google for C# implementations for the first three pages of results. We selected the algorithms that we were able to get more than five visually different C# implementations for. Sorting algorithms on RosettaCode:
+First, we visited [RosettaCode](http://www.rosettacode.org/wiki/Category:Sorting_Algorithms) to get a list of sorting algorithms (which contains comprehensive list of them). Then we searched each one on Google for C# implementations for the first three pages of results. We selected the algorithms that we were able to get more than five visually different C# implementations for. Sorting algorithms on RosettaCode:
 
 \* Note:  ✓ = included in dataset, ✗ = not included in dataset
 
@@ -633,6 +644,158 @@ We compared our tool's ability to cluster by strategy to [Microsoft's syntax-bas
 
 
 We see in the above results that Microsoft's tool created four clusters, one of which is "pure" (i.e., comprised of one type of sorting algorithm). Some limitations of Microsoft's near-duplicate detector is that it requires the Jaccard similarity threshold to be at least 0.8 for token-sets and and 0.7 for token multi-sets; it also only runs the tool on submissions that have at least 20 tokens, as highlighted in section three of the [corresponding paper](https://arxiv.org/pdf/1812.06469.pdf). In other words, files with fewer than 20 identifier tokens are not considered duplicates and are excluded from their analysis.
+
+
+
+## Taxonomy
+
+Below, I assign explicit and consistent labels to each cluster after having manually inspecting the submissions inside.
+
+### CodeHunt
+
+**Sector2-Level1:**
+
+Cluster0-
+
+* 1x: Uses `Array.Average()` and `Math.Floor()`. Unconditional round up; strangely adds 1 and floors if average is negative, else adds 0.5 and floors if average positive 
+  * ^ Likely **false positive** b/c if test case had negative numbers, this would give incorrect answer
+
+Cluster1-
+
+* 4x: Uses for-loop to accumulate average, then round up +0.5 *iff* decimal >= 0.5
+* 1x: Uses `Array.Average()` and then round up +0.5 *iff* decimal >= 0.5
+* 2x: Uses for-loop to accumulate average, then uses length to round up/down accordingly...doesn't take decimals into account
+* 1x: Uses `Array.Average()` and `Math.Truncate()`. Rounds up +0.5 *iff* decimal >= 0.5
+* 2x: Increment all elements in second half of array by 1, then take average...basically rounds up to nearest int
+* 2x: Uses for-loop to accumulate average, then `Math.Round()` to round up/down, depending if decimal >= 0.5 or < 0.5, respectively
+* 1x: Uses for-loop to accumulate average, then rounds up to nearest integer *iff* decimal > **0.7**
+* 1x: Uses `Array.Average()`, then adds/subtracts 0.5 based on the sign of the average (i.e., the smart way of doing cluster 0's strategy)
+
+Cluster2- 
+
+* 2x: Returns 0 if `Array.Average()` is negative, else round up if decimal >= 0.5, else round down
+* 2x: Use `Array.Average()`, then use `Math.Round()` + 1 if average decimal == 0.5, else just return `Math.Round()`
+  * ^ Likely **false positive** b/c yields incorrect answer when average has decimal 0.5, ex: {1, 2}. Actual avg = 1.5, but this prog yields 3. Code DOES work on {0, 1}, however, b/c C#'s Round() converts 0.5 down to 0 (but rounds 1.5 up to 2 for some reason). Test cases captured the second case but not the first. (User012-3-attempt050-20140920-215115-winning2, User012-4-attempt052-20140920-215334-winning2).
+* 2x: Uses `Array.Sum()`, divides by length, then adds 0.01 before casting to int via `Convert.ToInt32()`. They add 0.01 for same reason as above...C# rounds 0.5 down to 0 but rounds 1.5 up to 2. 
+
+Cluster3-
+
+* 2x: Uee for-loop to accumulate average, if average is negative integer, then unconditionally add 1, else floor the average (via `Math.Floor()`, then add 0.5, then conv to int) 
+  * ^ Likely **false positive** b/c yields incorrect ans when array.Length > 1 and average is negative int, ex: {-1, -1}. Expected = -1, actual = 0. Test cases didn't capture this.
+
+Cluster4- 
+
+* 1x: Use for-loop to accumulate average, then adds 0.1  and returns`Math.Round()`if average decimal == 0.5, or returns 0 if average in range (-0.5, 0), or adds 1 if average is negative non-int and returns `Math.Round()`.
+* 2x: Uses `Array.Average()`, then `Math.Round()` on the (average +/- 0.05), where the 0.5 depends on the sign of the average
+
+Cluster5-
+
+* 10x: Use for-loop to accumulate average, then unconditionally adds 1 if array.Length > 1 and average is negative, else adds 0.5 to average and casts result to integer
+  * ^ Likely **false positive** b/c yields incorrect answer when array.Length > 1 and average negative, ex: {-1, -1}. Expected = -1, actual = 0
+
+Cluster6- 
+
+* 1x: Use for-loop to accumulate average, then unconditionally adds 1 if average is negative, else if `avg - (int)avg == 0.5` then return `avg` (if avg is negative) and `(int)(avg+0.5)` (if avg is positive), else if average is positive, add 0.5 to it and floor the result
+
+Cluster7-
+
+* 2x: Use for-loop to accumulate average, return 0 is average is negative, else if has decimal == 0.5 then  return`Math.Round(avg) + 1` , else just return `Math.Round(avg)`.
+  * ^ Likely **false positive** b/c yields incorrect answer when average has decimal == 0.5, ex: {1, 2}, expected = 2, actual = 3. 
+
+Cluster8-
+
+* 1x: Uses `Array.Average()`, then adds 0.05, then `Math.Round()` the result, then converts to int via `Convert.ToInt32()`. If result of int conversion is positive or `-1` then return the result, else return 0.
+  * ^ Likely **false positive** b/c yields incorrect answer for averages that are less than -1, ex: {-2}, expected = -2, actual = 0.
+
+Cluster9-
+
+* 1x: Returns 0 if `Array.Average() <= -1 `  and array.Length > 1, return ceiling of average if `avg - (int)avg >= 0.5`, else just return `(int)avg`.
+
+Cluster10-
+
+* 1x: Use for-loop to accumulate average, then returns 0 if (hard-coded) array[0] == -1 and array[1] == -1, else truncates average if its decimal is in range [0, 0.5), else adds `1` to average and truncates result if decimal in range [0.5, 0.9], else just returns `(int)avg`.
+
+
+
+**Sector2-Level1:**
+
+Cluster0-
+
+* 27x: Uses for-loop to find '(' , ')' and increments/decrements count, respectively. Returns 0 if count goes negative (i.e., more right parens than left)
+* 3x: Uses for-loop to push each '()' onto stack. Pops if parens are matched
+* 3x: Use while-loop to replace each instance of '()' with empty string, and count the number of times the replacement happens
+
+Cluster1-
+
+* 3x: Uses Linq to `Select` the '()' in string and increments/decrements count, respectively. Returns 0 if count goes negative (i.e., more right parens than left)
+* 3x: Uses for-loop to find '(' , ')' and increments/decrements count, respectively. Returns 0 if count goes negative (i.e., more right parens than left)
+* 2x: Uses for-loop to push each '()' onto stack. Pops if parens are matched
+* 2x: Uses for-loop to find number of left and right parens, returns 0 if unbalanced parens, else uses another for-loop to make sure parens ordering is correct
+* 1x: Splits array first by '(', then by ')', then compares lengths of both parts to derive answer
+  * ^ Likely **false positive** b/c this strategy is very unique...(User046-1-attempt004-20140920-103858-winning3)
+
+
+
+**Sector2-Level5:**
+
+Cluster0-
+
+* 2x: Use `Array.Sort()` then iterates to find biggest difference
+
+Cluster1-
+
+* 19x: Use C# built-in `Array.Min()` and `Array.Max()` funcs
+* 11x: implement their own Array.Min() and Array.Max() funcs or use for-loop to find max and min values
+
+Cluster2-
+
+* 10x: Uses `Array.Sort()` then computes (last ele - first ele)
+
+Cluster3- 
+
+* 2x: Implements bubble sort, then computes (last ele - first ele)
+
+
+
+**Sector2-Level6:**
+
+Cluster0- 
+
+* 36x: Uses C#'s built-in int to binary converter, `Convert.ToString(x, 2)`
+* 4x: Implements their own int to binary method (iterative bit shifting)
+* 2x: Recursively performs modulo on x/2 
+* 13x: Iteratively performs modulo on x/2
+
+
+
+**Sector3-Level1**
+
+Cluster0- 
+
+* 3x: Uses `Select` statement to set all array elements greater than threshold to 0
+* 11x: Uses for-loop to set all array elements greater than threshold to 0
+
+Cluster1-
+
+* 1x: Uses for-loop to set all array elements that yield 0 when divided by the threshold to 0 (i.e., `if (a[i]/t == 0)`)
+
+
+
+**Sector3-Level2**
+
+Cluster0-
+
+* 26x: Iterative solution w/ for-loop
+* 6x: Iterative solution w/ `Enumerable.Range()`, `Skip()`, and `Aggregate()`
+* 16x: Recursive solution
+
+
+
+**Sector3-Level3**
+
+Cluster0-
+
+* 
 
 
 
