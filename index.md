@@ -392,7 +392,6 @@ Below are the steps taken in our evaluation setup in the form of a numbered list
 | Sector2-Level6  |           55/249            |            48/334             |
 | Sector3- Level1 |           15/102            |            22/156             |
 | Sector3-Level2  |           48/259            |            51/207             |
-| Sector3-Level3  |           13/255            |            24/255             |
 | Sector3-Level6  |           32/178            |            18/229             |
 | Sector4-Level2  |           10/128            |             7/126             |
 | Sector4-Level3  |            4/72             |             5/125             |
@@ -411,7 +410,6 @@ All of the CodeHunt puzzles evaluated have clear problem statements and are list
 - Sector2-Level6: Generate the string of binary digits for n
 - Sector3-Level1: Filter retaining only values >= threshold -- a crude noise filter
 - Sector3-Level2: Compute sum of n-th and n-1st Fibonacci numbers
-- Sector3-Level3: Find k-th largest element in an array
 - Sector3-Level6: Compute the set difference of a\b
 - Sector4-Level2: Compute n choose m, i.e. n!/(m! * (n-m)!)
 - Sector4-Level3: Given int array inputs a and f , apply b[i] = f[a[i]] and return b
@@ -791,11 +789,97 @@ Cluster0-
 
 
 
-**Sector3-Level3**
+**Sector3-Level6**
+
+Cluster0- 
+
+* 2x: Converts both integer arrays into hash sets, computes set difference via `setA.ExceptWith(setB)`, then converts set difference back to array
+* 7x: Returns difference between two arrays *without* converting to hash set (i.e., `a.Except(b).ToArray()`)
+* 4x: Does group join to combine both integer arrays, then adds the unique elements to a new integer array and returns it
+
+Cluster1- 
+
+* 5x: If array `a` only has one unique element and array `b` contains that unique element, then return empty array, else return `a`
+* 5x:  Defines an empty array list and adds all of array `a`'s elements to it via for-loop, then removes from it those elements that are shared with array `b` via for-loop
+* 3x: Uses C# Linq expressions (`Any()` or `Where(...Contains())`) to return all distinct elements from a that aren't in b as an array
+
+Cluster2-
+
+* 1x: Defines empty array, then iterates through array `a` w/ for-loop to see if a given element is contained in array `b` (via `Array.IndexOf()`). If it's not, then add the element to the empty array. Then sorts array then returns it.
+* 2x: Uses C# Linq expressions (`Where(...IndexOf())`) to return all distinct elements from a that aren't in b as an array
+
+Cluster3-
+
+* 1x: First sorts array `a`. Then defines empty array, then iterates through array `a` w/ for-loop to see if a given element is contained in array `b` (via `Array.IndexOf()`). If it's not, then add the element to the empty array. 
+  * ^ Likely **false positive**, b/c same code as a submission in cluster 2, except the `Array.Sort()` statement is in a different place
+
+Cluster4-
+
+* 1x: If array `b` is empty, then iterate through array `a` and return `a` if any of its elements are positive, else return [0]. Else, if neither array is empty, then iterate through `b` and see if any of `b`'s elements are equal to `a[0]`. If this condition evaluates to true, then return [0], else return `a`.
+
+Cluster5-
+
+* If both arrays are empty, return [0]. If they're both of length 1 and have same element, return [0] as well. If the sum of `a`'s elements  0 and b is empty, then return [0]. Else, copy the elements of `a` into a new array (via for-loop) and return new array.
+
+**Sector4-Level2**
+
+Cluster0- 
+
+* 1x: Uses C# Linq expressions (`Range().Aggregate()`) to calculate each factorial, then combines them all into a single equation
+* 3x: Uses recursion to calculate factorials in following "addition" format: `subset(n-1, k-1) + subset(n-1, k)`
+
+Cluster1-
+
+* 1x: Uses recursion in the following *traditional* equation format: `f(m)/(f(n)*f(m-n))`
+
+Cluster2-
+
+* 3x: Creates inline, recursive factorial func that follows traditional equation format: `f(m)/(f(n)*f(m-n))`
+  * ^ Likely **false positive** b/c this strategy is the same as the one in cluster 1, except this uses inline func, which may not be getting interpreted by Pex properly
+
+Cluster3- 
+
+* 1x: Iterative solution (optimized)
+
+Cluster4- 
+
+* 1x: Iterative solution (un-optimized)
+  * ^ Likely **false positive** b/c this is a less efficient version of that in cluster 3. Cluster 3 adds *one single line* that decreases the number of iterations that need to be run...they both yield the same results though (they allegedly diverge on {7, 6}, but they yield same output here...it's just that cluster 3's has less iterations)
+
+**Sector4-Level3**
 
 Cluster0-
 
-* 
+* 3x: Uses for-loop to perform `b[i] = f[a[i]]`, given input arrays `a` and `f`
+* 1x: Uses C# Linq expressions (`Range().Select()`) to perform `b[i] = f[a[i]]`
+
+**Sector4-Level4**
+
+Cluster0-
+
+* 6x: Nested for-loop where they count the number of factors each array element has; the element with the most factors is returned
+
+Cluster1- 
+
+* 1x: In a while-loop they record the number of times an array element can be bitwise AND'd w/ the element minus one (i.e., `x &= (x-1)`) until the element equals 0; the element w/ most iterations is returned
+
+Cluster2- 
+
+* 1x: Does some hardcoding to return certain values if the array length is three or if the number of non-zero elements in the array is less than two. Otherwise, they calculate the GCD for each element and divide the element by it. The element with the highest quotient is returned.
+
+**Sector4-Level6**
+
+Cluster0-
+
+* 7x: Iteratively calculates Fibonacci sequence and shifts each character per iteration, uses `%26` to wrap the shifted character back to beginning of alphabet so it doesn't exceed ['a'-'z'] boundaries
+* 1x: Uses C#'s Linq expressions (`Range().Select()`)  to first store Fibonacci into array, then another set of similar LInq expressions to shift each character by the values stored in the Fibonacci sequence array
+* 1x: Uses recursion to calculate Fibonacci sequence and Linq expressions (`Range().Select()`)  to shift each character by the sequence
+  * ^ Likely **false positive**, shouldn't we be able to distinguish iterative from recursive?
+
+Cluster1-
+
+* 1x: Iteratively calculates Fibonacci sequence and shifts each character per iteration, does *not* use modulo operator, instead manually subtracts 26 whenever shifted character outside of ['a'-'z'] range
+  * ^ Likely **false positive** b/c the strategy here is the same as that in cluster 0, except it doesn't use modulo operator
 
 
 
@@ -1119,6 +1203,10 @@ Skipping PKU's hw4 because it was taking *way* to long to cluster. This puzzle o
 April 25th, 2020:
 
 We're also skipping Pex4Fun's puzzle 37, 39, 41, 44, 46, 56, 106, and 109, 133. For some of them, it's because our tool failed to produce clusters for...I can't remember precisely why we ignore others, but it likely has to do with our tool not being able to execute `runseed.py` or `cluster.py` on them. I'll look back into it later.
+
+May 6th, 2020:
+
+Skipping CodeHunt's Sector3-Level3 because the student submissions and instructor solution don't have > 1 branch. I somehow missed this before, so now I'm ignoring it
 
 
 
