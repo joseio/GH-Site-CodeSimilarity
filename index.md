@@ -1042,14 +1042,6 @@ Cluster4-
 
 
 
-
-
-
-
-
-
-
-
 ### Pex4Fun
 
 **Puzzle 33**
