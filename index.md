@@ -423,21 +423,56 @@ All of the CodeHunt puzzles evaluated have clear problem statements and are list
 
 *Note:* Dataset in paper
 
-Below are the descriptions of the puzzles that explicitly featured problem statements in them:
+Below are the descriptions of the puzzles that explicitly featured problem statements in them, along with the problem statements that I inferred by examining student submissions and instructor solution:
 
 * 33: Use a while loop to count the number of digits in the input number x
-* 35: Given an integer as input, return a list of multiples of the input that are less than the input squared
+* 34: (inferred) Given an integer n as input, return a string of all numbers leading up to and including n, i.e., in range [0, n]
+* 35: Given an integer as input, return a string of multiples of the input that are less than the input squared
+* 36: (inferred) Given an integer as input, return a string of all numbers from [0, n) three times
 * 37: Display the results of integer division
+* 38: Given an input integer n and string, print the string n times
 * 39: Print the letters in the English alphabet
 * 40: Counting the number of occurrences of the letter "a" in the input string
+* 42: (inferred) Given an integer as input, return a string of multiples of the input that are less than or equal to the input squared, i.e., [0, 1, 4, 9, ...n^2]
+* 43: (inferred) Given an integer as input, return a string of multiples of the input that are less than or equal to the input squared in reverse order, i.e., [n^2, ...9, 4, 1, 0]
+* 45: (inferred) Given input integer, calculate its factorial
 * 47: Sum the even-indexed numbers in the input array
+* 48: (inferred) Given an input integer n, get a list of all integers in reverse order (i.e., [n, 1]), then multiply the index by the element value and add it to a running sum (e.g., `sum += a[i] * (i+1)` )
+* 49: (inferred) Given an input string, return a "_" for every letter in the input string (e.g., "you" -> "\_ _ _")
+* 50: (inferred) Given an input string, implement Caesar's cipher with offset of 5 and return the encoded string
+* 53: (inferred) Given an input integer, return true if it's less than 50, else return false
+* 55: (inferred) Given an input integer, return "zero" if it's 0, "negative" if it's negative, and "positive" if it's positive
+* 55: (inferred) Given an input integer that is less than 1000, return the number of digits the integer has
+* 58: (inferred)  Given an input integer, return "even" if the number is even and "odd" otherwise
+* 59: (inferred)  Given an input integer, return "multiple of 5" if it's a multiple of 5 and "not a multiple of 5" otherwise
+* 60: (inferred)  Given two input integers `i` and `x`, return "multiple of {x}" if is a multiple of x, and "not a multiple of {x}" otherwise 
+* 61: (inferred) Given three input integers `i`, `j`, and `k`, return "yes" if i = 2j and j = 2k, else return "no"
+* 62: (inferred) Given an input integer, return 0 if it's in range [0, 7], else return 7 if it's in range (7, 14], else return 21 if it's greater than 14
+* 63: (inferred) Given an input string, return "short" if its length is less than 4, else "average" if its length is in range [4, 8), else "long" if it's in range [8, 15)
 * 64: Check if an input integer represents a "fancy year," a year whose digits have all the same number
 * 65: Given three sides of a shape, figure out which two sides add to equal the remaining side squared
+* 73: (inferred) Given two input integers `i` and `j`, return true if i^2 == j, and false otherwise
+* 74: (inferred) Given an input string, return "yes" if it contains all lowercase letters, else false
+* 75: (inferred) Given an input string, make every letter at an even index uppercase, and every letter at odd index lowercase
+* 83: (inferred) Given two input strings, return the length of the longer string
+* 105: (inferred) Given an input integer array list `list`and an integer `i`, return true if `i` is in `list`, else false
+* 107: (inferred) Given an input integer `n`, return an integer array containing all integers in range [0, n]
+* 110: (inferred) Given an input integer, return an integer array list containing all integers in range [0, n] in reverse order
+* 111: (inferred) Given an input integer array, negate each element in-place and return the edited array
+* 112: (inferred) Given an input integer array, return the reversed array
+* 132: (inferred) Given an input integer array `numbers` and an integer `x`, return the number of occurrences of `x` in `numbers`
 * 135:  Find the last index of x in an input array
+* 140: (inferred) Given an input integer array, return true if it's sorted in ascending order, else false
+* 141: (inferred) Given an input string array, return true if it's sorted in ascending alphabetical order, else false
+* 143: (inferred) Given an input string array, return the array sorted in alphabetical ascending order
+* 144: (inferred) Given an input string, implement Caesar's cipher with offset of 7 and return the encoded string
+* 152: (inferred) Given an input string, return true if it's a palindrome, else false
 
-An interesting thing I noticed in the dataset is that sometimes the instructions explicitly state how the students should solve the problems (e.g., with or without a while-loop), but many students disregard these instructions and still end up getting the answer correct (e.g., puzzle 33). 
+An interesting thing I noticed in throughout the Pex4Fun dataset is that sometimes the instructions explicitly state how the students should solve the problems (e.g., with or without a while-loop), but many students disregard these instructions and still end up getting the answer correct (e.g., puzzle 33). 
 
-#### Puzzles to be discarded
+
+
+#### Puzzles to be Discarded
 
 We examined the  instructor solutions for each of the Pex4Fun puzzles to find those with unclear problem statements. We also examined the student submissions to find any puzzles for which they blatantly tried to guess and check to arrive at the right answer, in which case we would remove that puzzles from our evaluation, since this behavior is not representative of the typical CS education classroom. The puzzles in question are as follows:
 
@@ -451,6 +486,27 @@ We examined the  instructor solutions for each of the Pex4Fun puzzles to find th
 
 
 ### Peking University Dataset
+
+#### Problem Descriptions
+
+The problems from the PKU dataset didn't come with any problem descriptions, so I inferred them by manually inspecting the student submissions
+
+* Homework 1: (inferred) Given an input integer n, find and count all positive integers in range [0, n] that (1) share same first and last digits (e.g., 11, 101, 161) and (2) are not divisible by any preceding odd number
+
+* Homework 2: (inferred) Given input integer n, find the smallest value for x that makes the following equation true: $(Σ (1/j), j=1, x) > n$
+
+* Homework 3: (inferred) Given an input integer and an array of doubles, iterate through each array element and keep a running sum of the element * factor, where factor is: 
+
+  * 0 if element < 100
+  * 0.1 if element in range [100, 200)
+  * 0.3 if element in range [200, 500)
+  * 0.5 if element >= 500
+
+  Then return the sum.
+
+
+
+#### Submissions to be Discarded
 
 Many of the correct student submissions failed to compile after they were converted from C/C++ to C#. The most common reason for these compilation failures were things like incorrect data types in method signatures, method bodies, and also visibility issues (i.e., public, private, static methods and classes). I cleaned the dataset to fit my needs, such that the subjects that I evaluate are clean and able to be compiled. Here are some stats on how many correct, non-compiling submissions I needed to filter out of each puzzle to perform the above cleaning:
 
@@ -883,6 +939,469 @@ Cluster1-
 
 
 
+
+
+### Algorithms
+
+**Bubble Sort**
+
+Cluster0-
+
+* 3x: Nested for-loop
+* 3x: Nested for-loop with short-circuit optimization
+
+**Heap Sort**
+
+See [this source](https://www.reddit.com/r/algorithms/comments/8n543e/what_is_the_difference_between_maxheapify_and/) and [this source](https://en.wikipedia.org/wiki/Heapsort#Floyd's_heap_construction) for different heap constructions. I'm not too well versed on the nuanced differences between these different heap constructions yet, but when I tested the six implementations below on the int input [9, 6, 3, 12], I made the following observations:
+
+**I'm not confident on the below...can I get any deeper than this???**
+
+Cluster0-
+
+* 1x: Sift up heap construction (starts iterating from end of array)
+  * ^ 9 iterations inside 'MakeHeap' func
+
+Cluster1-
+
+* 1x: Sift up heap construction (starts at end of array)
+  * ^ 4 iterations inside 'MakeHeap'
+
+Cluster2-
+
+* 1x: Sift down heap construction (starts at beginning of array)
+  * ^ 6 iterations inside 'MakeHeap'
+
+Cluster3-
+
+* 1x: Sift up heap construction (starts at end of array)
+  * ^ 10 iterations inside 'MakeHeap'
+
+Cluster4-
+
+* 1x: Sift up heap construction (starts at end of array)
+  * ^ 10 iterations inside 'MakeHeap'
+
+Cluster5-
+
+* 1x: Sift down heap construction (starts at beginning of array)
+  * ^ 5 iterations inside 'MakeHeap'
+
+**Insertion Sort**
+
+Cluster0-
+
+All implementations in cluster 0 have two pointers: one in outer-loop that moves left to right and another in inner-loop that moves right to left. The one implementation in cluster 1 has two pointers that *both* move from left to right. 
+
+* 5x: Cascades smallest element down to left-most part of array
+  * Ex: [7,7,6,0]-> [7,**6**,7,0]-> [**6**,7,7,0]-> [6,7,**0**,7]-> [6,**0**,7,7]-> [**0**,6,7,7]
+
+Cluster1-
+
+* 1x: Finds the smallest element at to the right and directly swaps with it
+  * Ex: [7,7,6,0]-> [**0**,7,6,**7**]-> [0,**6**,**7**,7]
+
+**Merge Sort**
+
+Cluster0-
+
+* 3x: Stores left half of input array into one integer array and the right half into another integer array 
+* 1x: Doesn't store the halves into extra arrays, instead uses indices to partition the arrays (attempt005)
+
+Cluster1-
+
+* 1x: Doesn't store the halves into extra arrays, instead uses indices to partition the arrays (attempt003)
+  * ^ May be **false positive**...attempt003 and attempt005 look nearly identical...unsure why they weren't clustered together. The PCs are wildly long and unhelpful to understand why they weren't clustered together.
+
+Cluster2-
+
+* 1x: Stores left half of input array into a *list* and the right half into another *list*. Adds/deletes elements from lists instead of incrementing/decrementing pointers to array elements
+
+
+
+**Quick Sort**
+
+Cluster0-
+
+* 2x: Pivot is right-most index
+
+Cluster1-
+
+* 1x: Pivot is middle index
+
+Cluster2-
+
+* 1x: Pivot is $$log10(array.Length)/2$$
+
+Cluster3-
+
+* Pivot is left-most index
+
+Cluster4-
+
+* Pivot is randomly chosen index
+
+
+
+
+
+
+
+
+
+
+
+### Pex4Fun
+
+**Puzzle 33**
+
+Cluster0-
+
+* 4x: Converts input int to string and returns length of string (`return x.ToString().Length`)
+* 8x: Uses while-loop, dividing input int by 10 and incrementing count by 1 until the division is < 1
+
+Cluster1-
+
+* Returns log_10 of the input int + 1
+
+**Puzzle 34**
+
+Cluster0-
+
+* 9x: Uses for-loop to print all numbers up to and including n
+* 1x: Uses for-loop to print square of all numbers up to and including n, i.e., "0 1 4 9 16 ..."
+  * ^ Likely **false positive** b/c we assumed that last submission is correct...but we see this isn't the case here...this doesn't yield expected answer
+
+**Puzzle 35**
+
+Cluster0-
+
+* 7x: Uses for-loop to create a list of multiples of input integer n from [0, n)
+
+**Puzzle 36**
+
+Cluster0-
+
+* 1x: Uses two separate for-loops to return all numbers from [0, n) three times
+* 1x: Uses one for-loop to store all numbers from [0, n) into a string, then returns `string + string + string` (concatenated to itself twice)
+
+Cluster1-
+
+* 2x: Uses one for-loop and iterates until 3*input, then uses modulo operator to store all numbers from  [0, n) into a string, then returns result
+
+**Puzzle 38**
+
+Cluster0-
+
+* 7x: Use for-loop to print string n times
+
+**Puzzle 40**
+
+Cluster0-
+
+* 2x: Uses Linq expression to count all occurrences of letter 'a' in string
+* 4x: Uses for-loop to count all occurrences of letter 'a' in string
+
+**Puzzle 42**
+
+Cluster0-
+
+* 4x: Uses for-loop to output [0, 1, 4, ...n^2] (in ascending order), appends to result string
+* 1x: Uses Linq expression to output [0, 1, 4, ...n^2]
+
+Cluster1-
+
+* Uses  for-loop to output [0, 1, 4, ...n^2], but starts iterating from end of array and *prepends* to result string
+
+**Puzzle 43**
+
+Cluster0-
+
+* 4x: Uses for-loop to output [n^2...4, 1, 0] (descending order); starting iteration from end of array and prepends to result string
+* 1x: Uses Linq expression
+
+**Puzzle 45**
+
+Cluster0-
+
+* 2x: Uses for-loop to calculate factorial
+* 2x: Uses recursion
+
+**Puzzle 47**
+
+Cluster0-
+
+* 2x: Uses for-loop, incrementing the sum only on the even-numbered indices
+
+**Puzzle 48**
+
+Cluster0-
+
+* 1x: Uses one for-loop to multiple each number from [n, 1] by its (index+1) , takes O(n)
+* 1x: Uses nested for-loop to do the same work, takes O(n^2) though
+
+**Puzzle 49**
+
+Cluster0-
+
+* 6x: Uses for-loop to put one "_" for length of input string
+
+**Puzzle 50**
+
+Cluster0-
+
+* 6x: Uses for-loop to implement Caesar's cipher
+
+**Puzzle 53**
+
+Cluster0-
+
+* 5x: Returns true if input integer less than 50, else false
+
+**Puzzle 55**
+
+Cluster0-
+
+* 7x: Uses if-else statements to return the proper strings
+
+**Puzzle 57**
+
+Cluster0-
+
+* 5x: Uses if-else statements to return "one" if the input integer is less than 10, "two" if it's less than 100, and "three" if it's less than 1000
+
+Cluster1- 
+
+* 1x: Converts input integer to string and uses if-else statements to return "one", "two", or "three" based on the length of the string
+
+**Puzzle 58**
+
+Cluster0-
+
+* 6x: Uses if-else statements to return "even" if input integer is even, else returns "odd"
+
+**Puzzle 59**
+
+Cluster0-
+
+* 6x: Uses if-else statements to return proper strings
+
+**Puzzle 60**
+
+Cluster0-
+
+* 6x: Uses if-else statements to return proper strings
+
+**Puzzle 61**
+
+Cluster0-
+
+* 4x: Uses if-else statements to return proper strings if i == 2j and j == 2k
+
+Cluster1-
+
+* 1x: Uses if-else statements to return proper strings by first checking if `i ` and `j` are even numbers, if they are not, return "no", else return "yes" if i/2 == j and j/2 == k, else return "no"
+
+**Puzzle 62**
+
+Cluster0-
+
+* 4x: Uses if-else statements to return proper strings
+
+**Puzzle 63**
+
+Cluster0-
+
+* 5x: Uses if-else statements to return proper strings
+
+**Puzzle 64**
+
+Cluster0-
+
+* 1x: Continually divides input integer by 10 to check each digit to see if the original input represents a "fancy year" 
+
+Cluster1-
+
+* 2x: Hard-codes to test if the input is "1111" or "2222" or ... "9999"
+
+Clsuter2-
+
+* 1x: Stores each digit of the number into a variable via combination of division and modulus, then checks if each digit is the same
+
+Cluster3-
+
+* 1x: If input integer is less than 10,000 and input%1111 == 0, then it represents a fancy year
+
+**Puzzle 65**
+
+Cluster0- 
+
+* 3x: Returns true if either combination (i.e., a^2 + b^2 == c^2, a^2 + c^2 == b^2, b^2 + c^2 == a^2) is true, else false
+* 1x: Places integers a, b, c into an array and sorts it, then returns true if arr[0]^2 + arr[1]^2 == arr[2]^2, else false
+  * ^ \*\* May be **false positive** b/c this seems like completely diff strategy than the other three...
+
+**Puzzle 73**
+
+Cluster0-
+
+* 1x: Uses if-else statements to return proper boolean
+
+**Puzzle 74**
+
+Cluster0-
+
+* 1x: Unconditionally returns "No"
+  * ^ Must be **false positive** b/c doesn't produce right answer when input string does contain all lowercase, b/c has no condition check
+* 4x: Uses if-else statements to return proper string
+
+**Puzzle 75**
+
+Cluster0-
+
+* 3x: Uses for-loop to do alternate upper and lower case characters
+
+**Puzzle 105**
+
+Cluster0-
+
+* 2x: Uses Linq expression `Contains()` to see if input integer is within input integer array
+* 1x: Uses for-loop to see if input integer is within input integer array
+
+ **Puzzle 107**
+
+Cluster0-
+
+* 2x: Uses for-loop to create integer array from [0, n], where n in input integer
+
+**Puzzle 110**
+
+Cluster0-
+
+* 1x: Uses single for-loop to create integer array from [n, 0] (reverse order)
+* 1x: Uses two for-loops; first one creates integer array from [0, n], then another for-loop to reverse the array in-place
+  * ^ May be **false positive**...why should these be considered the same strategy if the second submission clearly did more work and used diff approach?
+
+**Puzzle 111**
+
+Cluster0-
+
+* 2x: Uses for-loop to negate each element of array
+
+**Puzzle 112**
+
+Clsuter0-
+
+* 2x: Use `Array.Reverse()` 
+* 1x: Use for-loop to reverse the input integer array
+
+**Puzzle 132**
+
+Cluster0-
+
+* 5x: Uses for-loop to count occurrence of input integer in input integer array
+* 1x: Uses Linq expression (`List.FindAll()`) to count occurrence of input integer in input integer array
+
+**Puzzle 135**
+
+Cluster0-
+
+* 1x: Uses for-loop to find last index of integer in input integer array; starts iterating from end of array
+* 2x: Uses Linq expression (`Array.LastIndexOf()`) to find last index of integer in input integer array
+
+Cluster1-
+
+* 1x:  Uses for-loop to find last index of integer in input integer array; starts iterating from *beginning* of array
+
+**Puzzle 140**
+
+Cluster0-
+
+* 3x: Uses for-loop to determine if array in ascending order; return true if it is, else false
+
+**Puzzle 144**
+
+Cluster0-
+
+* 3x: Uses for-loop to implement Caesar's cipher with offset of seven
+
+**Puzzle 152**
+
+Cluster0-
+
+* 1x: Uses one for-loop and two pointers (head, tail) to see if characters at both pointers are same letter (i.e., is the input string a palindrome)
+* 1x: Stores both halves of the input string into two variables, reverses one, and returns true if they're equal, else false
+
+
+
+### Peking University 
+
+**Homework 1**
+
+For all submissions in cluster 0, they have an outer-loop which iterates `j` from 11 to the input integer. Then there's an inner-loop which checks to see if `j` is prime. Cluster 1 *doesn't* use such an inner-loop.
+
+Cluster0-
+
+* 22x: Checks to see if all positive integers from [2, 3, 4, ...n] are factors of the integer n in question
+* 6x: Checks if *odd* positive integers from [3, 5, ...sqrt(n)] are factors of the integer n in question
+* 20x: Checks if all positive integers from [2, 3, 4, ...sqrt(n)] are factors of the integer n in question
+* 10x: Checks if all positive integers from [2, 3, 4, ...(n/2)] are factors of the integer n in question
+* 4x: Checks if all *odd* positive integers from [3, 5, ...(n/2)] are factors of the integer n in question
+
+Cluster1-
+
+* 1x: First makes list of prime integers, then increments the running sum for each prime integer with the same beginning and ending digit values
+  * Checks if all positive integers from [2, 3, 4, ...sqrt(n)] are factors of the integer n in question
+  * Doesn't use inner-loop to check if integer in question in prime
+
+**Homework 2**
+
+For some reason, Pex reports "limitation in floating point conversion" when comparing a double to an int (e.g., `if (myDouble >= myInt)...`). This may affect clustering.
+
+Cluster0-
+
+* 21x: Stops computing summation once running sum >= input integer
+  * Has PC: `input > 0 && input <= 1` and returns `1` for input integer 1
+* 183x: Stops iterating once running sum > input integer
+  * **To verify that the following is true for all 183 subs:** returns `2` for input integer 1 and has PC: `input >= 1 && input < 1.5` b/c of `if (sum > input)...` inside for-loop
+
+Cluster1-
+
+* 5x: Stops computing summation once running sum >= input integer
+  * Has PC: `input <= 1`
+* 1x: Stops iterating once running sum > input integer
+  * Outputs `2` for input integer 1 b/c of do-while structure
+  * Has PC: `input < 1.5`
+* ^ *All six* in cluster 1 likely **false positives** b/c they all use exactly same strategy. PCs fail here b/c placement of conditional statements differ based on loop type used (i.e., for, while, do-while). 
+
+**Homework 3**
+
+The difference here is that the submissions in cluster 1 define a lower bound on the range of values for each array element, whereas those in cluster 0 do not.
+
+Cluster0-
+
+* 517x: Have if-statements for the following cases: 
+  * (1) element < 100
+  * (2) element in range [100, 200)
+  * (3) element in range [200, 500)
+  * (4) element >= 500
+
+Cluster1-
+
+* 9x: Have if-statements for the following cases:
+  * (1) *element in range [0, 100)* 
+  * (2) element in range [100, 200)
+  * (3) element in range [200, 500)
+  * (4) element >= 500
+
+
+
+
+
+
+
+****
+
+
+
 ### Analyzing results
 
 Let's look at (E) above and see why all but one insertion sort implementations were clustered together. 
@@ -1206,7 +1725,11 @@ We're also skipping Pex4Fun's puzzle 37, 39, 41, 44, 46, 56, 106, and 109, 133. 
 
 May 6th, 2020:
 
-Skipping CodeHunt's Sector3-Level3 because the student submissions and instructor solution don't have > 1 branch. I somehow missed this before, so now I'm ignoring it
+Skipping CodeHunt's Sector3-Level3 because the student submissions and instructor solution don't have > 1 branch. I somehow missed this before, so now I'm ignoring it.
+
+May 8th, 2020:
+
+Skipping Pex4Fun's Puzzle 83, 141, and 143 because our tool failed to cluster their submissions, for some reason. Ignoring them for now.
 
 
 
