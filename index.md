@@ -716,31 +716,31 @@ Cluster0-
 
 Cluster1-
 
-* 4x: Uses for-loop to accumulate average, then round up +0.5 *iff* decimal >= 0.5
-* 1x: Uses `Array.Average()` and then round up +0.5 *iff* decimal >= 0.5
-* 2x: Uses for-loop to accumulate average, then uses length to round up/down accordingly...doesn't take decimals into account
-* 1x: Uses `Array.Average()` and `Math.Truncate()`. Rounds up +0.5 *iff* decimal >= 0.5
-* 2x: Increment all elements in second half of array by 1, then take average...basically rounds up to nearest int
-* 2x: Uses for-loop to accumulate average, then `Math.Round()` to round up/down, depending if decimal >= 0.5 or < 0.5, respectively
-* 1x: Uses for-loop to accumulate average, then rounds up to nearest integer *iff* decimal > **0.7**
-* 1x: Uses `Array.Average()`, then adds/subtracts 0.5 based on the sign of the average (i.e., the smart way of doing cluster 0's strategy)
+* 4x: Uses for-loop to accumulate average, then round up +0.5 *iff* decimal >= 0.5 <span style='color:red'>(Group1)</span>
+* 1x: Uses `Array.Average()` and then round up +0.5 *iff* decimal >= 0.5 <span style='color:red'>(Group1)</span>
+* 2x: Uses for-loop to accumulate average, then uses array length to round up/down accordingly...doesn't take decimals into account <span style='color:blue'>(Group2)</span>
+* 1x: Uses `Array.Average()` and `Math.Truncate()`. Rounds up +0.5 *iff* decimal >= 0.5 <span style='color:red'>(Group1)</span>
+* 2x: Increment all elements in second half of array by 1, then take average...basically rounds up to nearest int <span style='color:green'>(Group3)</span>
+* 2x: Uses for-loop to accumulate average, then `Math.Round()` to round up/down, depending if decimal >= 0.5 or < 0.5, respectively <span style='color:red'>(Group1)</span>
+* 1x: Uses for-loop to accumulate average, then rounds up to nearest integer *iff* decimal > **0.7** <span style='color:purple'>(Group4)</span>
+* 1x: Uses `Array.Average()`, then adds/subtracts 0.5 based on the sign of the average (i.e., the smart way of doing cluster 0's strategy) <span style='color:orange'>(Group5)</span>
 
 Cluster2- 
 
-* 2x: Returns 0 if `Array.Average()` is negative, else round up if decimal >= 0.5, else round down
-* 2x: Use `Array.Average()`, then use `Math.Round()` + 1 if average decimal == 0.5, else just return `Math.Round()`
+* 2x: Returns 0 if `Array.Average()` is negative, else round up if decimal >= 0.5, else round down <span style='color:red'>(Group1)</span>
+* 2x: Use `Array.Average()`, then use `Math.Round()` + 1 if average decimal == 0.5, else just return `Math.Round()` <span style='color:blue'>(Group2)</span>
   * ^ Likely **false positive** b/c yields incorrect answer when average has decimal 0.5, ex: {1, 2}. Actual avg = 1.5, but this prog yields 3. Code DOES work on {0, 1}, however, b/c C#'s Round() converts 0.5 down to 0 (but rounds 1.5 up to 2 for some reason). Test cases captured the second case but not the first. (User012-3-attempt050-20140920-215115-winning2, User012-4-attempt052-20140920-215334-winning2).
-* 2x: Uses `Array.Sum()`, divides by length, then adds 0.01 before casting to int via `Convert.ToInt32()`. They add 0.01 for same reason as above...C# rounds 0.5 down to 0 but rounds 1.5 up to 2. 
+* 2x: Uses `Array.Sum()`, divides by length, then adds 0.01 before casting to int via `Convert.ToInt32()`. They add 0.01 for same reason as above...C# rounds 0.5 down to 0 but rounds 1.5 up to 2.  <span style='color:green'>(Group3)</span>
 
 Cluster3-
 
-* 2x: Uee for-loop to accumulate average, if average is negative integer, then unconditionally add 1, else floor the average (via `Math.Floor()`, then add 0.5, then conv to int) 
+* 2x: Use for-loop to accumulate average, if average is negative integer, then unconditionally add 1, else floor the average (via `Math.Floor()`, then add 0.5, then conv to int) 
   * ^ Likely **false positive** b/c yields incorrect ans when array.Length > 1 and average is negative int, ex: {-1, -1}. Expected = -1, actual = 0. Test cases didn't capture this.
 
 Cluster4- 
 
-* 1x: Use for-loop to accumulate average, then adds 0.1  and returns`Math.Round()`if average decimal == 0.5, or returns 0 if average in range (-0.5, 0), or adds 1 if average is negative non-int and returns `Math.Round()`.
-* 2x: Uses `Array.Average()`, then `Math.Round()` on the (average +/- 0.05), where the 0.5 depends on the sign of the average
+* 1x: Use for-loop to accumulate average, then adds 0.1  and returns`Math.Round()`if average decimal == 0.5, or returns 0 if average in range (-0.5, 0), or adds 1 if average is negative non-int and returns `Math.Round()`. <span style='color:red'>(Group1)</span>
+* 2x: Uses `Array.Average()`, then `Math.Round(avg+/-0.05)`, where the 0.05 depends on the sign of the average <span style='color:blue'>(Group2)</span>
 
 Cluster5-
 
@@ -773,9 +773,11 @@ Cluster10-
 
 **Sector2-Level1:**
 
+Difference is that cluster 0 returns 0 as soon as count goes negative whereas cluster 1 does not.
+
 Cluster0-
 
-* 27x: Uses for-loop to find '(' , ')' and increments/decrements count, respectively. Returns 0 if count goes negative (i.e., more right parens than left)
+* 27x: Uses for-loop to find '(' , ')' and increments/decrements count, respectively. *Returns 0 as soon as count goes negative* (i.e., more right parens than left)
 * 3x: Uses for-loop to push each '()' onto stack. Pops if parens are matched
 * 3x: Use while-loop to replace each instance of '()' with empty string, and count the number of times the replacement happens
 
@@ -959,31 +961,39 @@ See [this source](https://www.reddit.com/r/algorithms/comments/8n543e/what_is_th
 Cluster0-
 
 * 1x: Sift up heap construction (starts iterating from end of array)
+  * (attempt001) When initially building heap, heapifies every element of array 
   * ^ 9 iterations inside 'MakeHeap' func
 
 Cluster1-
 
 * 1x: Sift up heap construction (starts at end of array)
+  * (attempt000) When initially building heap, heapifies only the leaf nodes (i.e., last half of array)
   * ^ 4 iterations inside 'MakeHeap'
 
 Cluster2-
 
 * 1x: Sift down heap construction (starts at beginning of array)
+  * Similar to cluster 1, the difference being that cluster 2 doesn't swap elements inside the heapify function
   * ^ 6 iterations inside 'MakeHeap'
+  * (attempt002) I replaced `ref` swap with regular swap b/c Pex considers these two types of swaps to be "diff strategy," when they're actually the same thing...
+    * Doing this did *not* alter clustering results...they're all still in cluster by themselves
 
 Cluster3-
 
 * 1x: Sift up heap construction (starts at end of array)
+  * (attempt004) Heapifies leaf nodes and has a recursive `heapify()` function
   * ^ 10 iterations inside 'MakeHeap'
 
 Cluster4-
 
 * 1x: Sift up heap construction (starts at end of array)
+  * (attempt003) Also only heapifies leaf nodes in initial heap construction. Apart from this I'm unsure how it's diff from cluster 1... 
   * ^ 10 iterations inside 'MakeHeap'
 
 Cluster5-
 
 * 1x: Sift down heap construction (starts at beginning of array)
+  * Heapifies leaf nodes and has a recursive `heapify()` function (attempt005). Apart from the # iterations, I'm not sure how it's different from cluster 3's...
   * ^ 5 iterations inside 'MakeHeap'
 
 **Insertion Sort**
