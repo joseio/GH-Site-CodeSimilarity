@@ -410,7 +410,7 @@ All of the CodeHunt puzzles evaluated have clear problem statements and are list
 - Sector2-Level6: Generate the string of binary digits for n
 - Sector3-Level1: Filter retaining only values >= threshold -- a crude noise filter
 - Sector3-Level2: Compute sum of n-th and n-1st Fibonacci numbers
-- Sector3-Level6: Compute the set difference of a\b
+- Sector3-Level6: Compute the set difference of a and b (i.e., find the elements that are unique to a)
 - Sector4-Level2: Compute n choose m, i.e. n!/(m! * (n-m)!)
 - Sector4-Level3: Given int array inputs a and f , apply b[i] = f[a[i]] and return b
 - Sector4-Level4: Return the (first) value with the most number of 1's in its binary representation
@@ -491,7 +491,7 @@ We examined the  instructor solutions for each of the Pex4Fun puzzles to find th
 
 The problems from the PKU dataset didn't come with any problem descriptions, so I inferred them by manually inspecting the student submissions
 
-* Homework 1: (inferred) Given an input integer n, find and count all positive integers in range [0, n] that (1) share same first and last digits (e.g., 11, 101, 161) and (2) are not divisible by any preceding odd number
+* Homework 1: (inferred) Given an input integer n, find and count all positive integers in range [0, n] that are prime
 
 * Homework 2: (inferred) Given input integer n, find the smallest value for x that makes the following equation true: $(Σ (1/j), j=1, x) > n$
 
@@ -716,21 +716,21 @@ Cluster0-
 
 Cluster1-
 
-* 4x: Uses for-loop to accumulate average, then round up +0.5 *iff* decimal >= 0.5 <span style='color:red'>(Group1)</span>
-* 1x: Uses `Array.Average()` and then round up +0.5 *iff* decimal >= 0.5 <span style='color:red'>(Group1)</span>
-* 2x: Uses for-loop to accumulate average, then uses array length to round up/down accordingly...doesn't take decimals into account <span style='color:blue'>(Group2)</span>
-* 1x: Uses `Array.Average()` and `Math.Truncate()`. Rounds up +0.5 *iff* decimal >= 0.5 <span style='color:red'>(Group1)</span>
-* 2x: Increment all elements in second half of array by 1, then take average...basically rounds up to nearest int <span style='color:green'>(Group3)</span>
-* 2x: Uses for-loop to accumulate average, then `Math.Round()` to round up/down, depending if decimal >= 0.5 or < 0.5, respectively <span style='color:red'>(Group1)</span>
-* 1x: Uses for-loop to accumulate average, then rounds up to nearest integer *iff* decimal > **0.7** <span style='color:purple'>(Group4)</span>
-* 1x: Uses `Array.Average()`, then adds/subtracts 0.5 based on the sign of the average (i.e., the smart way of doing cluster 0's strategy) <span style='color:orange'>(Group5)</span>
+* 4x: Uses for-loop to accumulate average, then round up +0.5 *iff* decimal >= 0.5
+* 1x: Uses `Array.Average()` and then round up +0.5 *iff* decimal >= 0.5 
+* 2x: Uses for-loop to accumulate average, then uses array length to round up/down accordingly...doesn't take decimals into account 
+* 1x: Uses `Array.Average()` and `Math.Truncate()`. Rounds up +0.5 *iff* decimal >= 0.5 
+* 2x: Increment all elements in second half of array by 1, then take average...basically rounds up to nearest int 
+* 2x: Uses for-loop to accumulate average, then `Math.Round()` to round up/down, depending if decimal >= 0.5 or < 0.5, respectively
+* 1x: Uses for-loop to accumulate average, then rounds up to nearest integer *iff* decimal > **0.7** 
+* 1x: Uses `Array.Average()`, then adds/subtracts 0.5 based on the sign of the average (i.e., the smart way of doing cluster 0's strategy) 
 
 Cluster2- 
 
-* 2x: Returns 0 if `Array.Average()` is negative, else round up if decimal >= 0.5, else round down <span style='color:red'>(Group1)</span>
-* 2x: Use `Array.Average()`, then use `Math.Round()` + 1 if average decimal == 0.5, else just return `Math.Round()` <span style='color:blue'>(Group2)</span>
+* 2x: Returns 0 if `Array.Average()` is negative, else round up if decimal >= 0.5, else round down 
+* 2x: Use `Array.Average()`, then use `Math.Round()` + 1 if average decimal == 0.5, else just return `Math.Round()`
   * ^ Likely **false positive** b/c yields incorrect answer when average has decimal 0.5, ex: {1, 2}. Actual avg = 1.5, but this prog yields 3. Code DOES work on {0, 1}, however, b/c C#'s Round() converts 0.5 down to 0 (but rounds 1.5 up to 2 for some reason). Test cases captured the second case but not the first. (User012-3-attempt050-20140920-215115-winning2, User012-4-attempt052-20140920-215334-winning2).
-* 2x: Uses `Array.Sum()`, divides by length, then adds 0.01 before casting to int via `Convert.ToInt32()`. They add 0.01 for same reason as above...C# rounds 0.5 down to 0 but rounds 1.5 up to 2.  <span style='color:green'>(Group3)</span>
+* 2x: Uses `Array.Sum()`, divides by length, then adds 0.01 before casting to int via `Convert.ToInt32()`. They add 0.01 for same reason as above...C# rounds 0.5 down to 0 but rounds 1.5 up to 2.  
 
 Cluster3-
 
@@ -739,7 +739,7 @@ Cluster3-
 
 Cluster4- 
 
-* 1x: Use for-loop to accumulate average, then adds 0.1  and returns`Math.Round()`if average decimal == 0.5, or returns 0 if average in range (-0.5, 0), or adds 1 if average is negative non-int and returns `Math.Round()`. <span style='color:red'>(Group1)</span>
+* 1x: Use for-loop to accumulate average, then adds 0.1  and returns`Math.Round()`if average decimal == 0.5, or returns 0 if average in range (-0.5, 0), or adds 1 if average is negative non-int and returns `Math.Round()`. 
 * 2x: Uses `Array.Average()`, then `Math.Round(avg+/-0.05)`, where the 0.05 depends on the sign of the average <span style='color:blue'>(Group2)</span>
 
 Cluster5-
@@ -858,6 +858,7 @@ Cluster0-
 Cluster1- 
 
 * 5x: If array `a` only has one unique element and array `b` contains that unique element, then return empty array, else return `a`
+  * ^ Likely **false positive** b/c just returning `a` is not sufficient. Produces incorrect answer on input: a=[1,2,3], b=[3,4,5]. Expected=[1,2], Actual=[1,2,3]
 * 5x:  Defines an empty array list and adds all of array `a`'s elements to it via for-loop, then removes from it those elements that are shared with array `b` via for-loop
 * 3x: Uses C# Linq expressions (`Any()` or `Where(...Contains())`) to return all distinct elements from a that aren't in b as an array
 
@@ -1369,10 +1370,11 @@ Cluster1-
 
 * 5x: Stops computing summation once running sum >= input integer
   * Has PC: `input <= 1`
+  * Outputs `1` for input integer 1
 * 1x: Stops iterating once running sum > input integer
   * Outputs `2` for input integer 1 b/c of do-while structure
   * Has PC: `input < 1.5`
-* ^ *All six* in cluster 1 likely **false positives** b/c they all use exactly same strategy. PCs fail here b/c placement of conditional statements differ based on loop type used (i.e., for, while, do-while). 
+* ^ *Five* in cluster 1 likely **false positives** b/c they all use exactly same strategy. PCs fail here b/c placement of conditional statements differ based on loop type used (i.e., for, while, do-while). 
 
 **Homework 3**
 
