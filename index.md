@@ -1,7 +1,7 @@
 <title>CodeSimilarity v. 2</title>
 # <center>CodeSimilarity v. 2</center>
 
-*Last updated March 19th, 2020*
+*Last updated May 16th, 2020*
 
 
 
@@ -740,7 +740,7 @@ Cluster3-
 Cluster4- 
 
 * 1x: Use for-loop to accumulate average, then adds 0.1  and returns`Math.Round()`if average decimal == 0.5, or returns 0 if average in range (-0.5, 0), or adds 1 if average is negative non-int and returns `Math.Round()`. 
-* 2x: Uses `Array.Average()`, then `Math.Round(avg+/-0.05)`, where the 0.05 depends on the sign of the average <span style='color:blue'>(Group2)</span>
+* 2x: Uses `Array.Average()`, then `Math.Round(avg+/-0.05)`, where the 0.05 depends on the sign of the average
 
 Cluster5-
 
@@ -1745,4 +1745,4 @@ Found a bug where preambles with `&&` operators were getting split up, which aff
 
 PC1 = ` bool s0 = a[0] > a[1]; bool s1 = s0 && a[2] > a[1]; return 5`
 
-The above expression for`s1` would get split into two terms, which in many cases is undesirable. Fixed this bug by not splitting up preamble expressions.
+The above expression for`s1` would get split into two terms, which in many cases is undesirable. Fixed this bug by not splitting up preamble expressions.g
